@@ -1,6 +1,6 @@
 # The {ggcorset} package
 
-The {ggcorset} package introduces a new visualization technique coined the 'corset plot'. It is used strictly to visualize discrete repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin. Additionally, the trajectory of individual change is visualized by connecting these two points linearly, which can be filled to represent the percent of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data.
+The {ggcorset} package introduces a new visualization technique coined the 'corset plot'. It is used strictly to visualize discrete repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin. Additionally, the trajectory of individual change is visualized by connecting these two points linearly, which can be filled to visualize the amount of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data.
 
 The package relies on {ggplot2} to produce the visualizations. As such, the corset plot allows for easy integration with {ggplot2}, so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
 
