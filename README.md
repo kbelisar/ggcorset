@@ -88,5 +88,8 @@ p1 <- p1 + xlab("Time") + ylab("Mean Days per Week") +      # change x and y axi
                            
 p1    # to see the modified plot
 ```
+** Example Corset Plot:**
+
+This plot was solely created using the example data set and the code used in the example above. Of course, with {ggplot2}, the options for customization are near limitless!
 
 ![image](https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_example.png)
