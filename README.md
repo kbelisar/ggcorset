@@ -1,6 +1,6 @@
 # The {ggcorset} package
 
-The {ggcorset} package introduces a new visualization technique coined the 'corset plot'. It is used strictly to visualize discrete repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin. Additionally, the trajectory of individual change is visualized by connecting these two points linearly, which can be filled to visualize the amount of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data.
+The {ggcorset} package introduces a new visualization technique coined the 'corset plot'. It is used strictly to visualize discrete repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin. Additionally, the trajectory of individual change is visualized by connecting these two points linearly, which can be filled to visualize the magnitude of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data.
 
 The package relies on {ggplot2} to produce the visualizations. As such, the corset plot allows for easy integration with {ggplot2}, so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
 
@@ -72,15 +72,20 @@ drinkdays$change <- drinkdays$time2-drinkdays$time1
 ```
 p1 <- gg_corset(drinkdays, y_var1 = "pre", y_var2 = "post", group. = "id", c_var = "change")
 
-p1  # to see the initial visualization
+p1    # to see the initial visualization
 ```
 
 **Changes to the corset plot can be made by using {ggplot2}:**
 ```
 library(ggplot2)
 
-p1 <- p1 + xlab("X-Axis Label") + ylab("Y-Axis Label") +        # change x and y axis labels
-      ggtitle("Title of Corset Plot") +                         # add a plot title
-      scale_x_discrete(labels = c("pre","post")) +              # rename the time1 and time2 values on the x-axis
-      scale_colour viridis(option = "mako", name = "% Change")  # can rename the legend title here
+p1 <- p1 + xlab("Time") + ylab("Mean Days per Week") +      # change x and y axis labels
+      ggtitle("Change in Mean Drinking Days per Week") +    # add a plot title
+      scale_x_discrete(labels = c("Pre","Post")) +          # rename the time1 and time2 values on the x-axis
+      scale_colour_viridis(option = "mako", 
+                           breaks = c(-7,0,7),              # can set the legend limits here
+                           name = "Change in Days")         # can rename the legend title here
+                           
+p1    # to see the modified plot
 ```
+
