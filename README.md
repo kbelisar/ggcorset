@@ -88,8 +88,14 @@ p1 <- p1 + xlab("Time") + ylab("Mean Days per Week") +      # change x and y axi
                            
 p1    # to see the modified plot
 ```
-** Example Corset Plot:**
+**Example Corset Plot:**
 
 This plot was solely created using the example data set and the code used in the example above. Of course, with {ggplot2}, the options for customization are near limitless!
 
 ![image](https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_example.png)
+
+## Additional Corset Plot Examples
+
+The `c_var` variable can also be used to visualize changes in the repeated measurement from time 1 to time 2, by categorizing those as having an increase, decrease, or no change, or other specified categories. The following is an example of a corset plot using a categorical variable for the `c_var`:
+
+![impage](https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_discrete_example.png)
