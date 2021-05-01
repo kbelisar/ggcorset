@@ -26,6 +26,8 @@ This function is used to create a corset plot with data in the wide format. It t
 
 `c_var` = the name of the variable to visualize by line colour
 
+`vio_fill` = the fill colour of the half violins (optional - defaults to a soft black)
+
 
 ## gg_corset_elongated()
 
@@ -42,6 +44,8 @@ This function is used to create a corset plot with data in the long format. It t
 `group` = the name of the units measured at each time point (such as id)
 
 `c_var` = the name of the variable to visualize by line colour
+
+`vio_fill` = the fill colour of the half violins (optional - defaults to a soft black)
 
 
 ## A Quick Guide on {ggplot2} Customization:
