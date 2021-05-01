@@ -89,3 +89,4 @@ p1 <- p1 + xlab("Time") + ylab("Mean Days per Week") +      # change x and y axi
 p1    # to see the modified plot
 ```
 
+![image](https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_example.png)
