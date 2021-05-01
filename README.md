@@ -87,6 +87,7 @@ p1 <- p1 + xlab("Time") + ylab("Mean Days per Week") +      # change x and y axi
       ggtitle("Change in Mean Drinking Days per Week") +    # add a plot title
       scale_x_discrete(labels = c("Pre","Post")) +          # rename the time1 and time2 values on the x-axis
       scale_colour_viridis(option = "mako", 
+                           direction = -1,
                            breaks = c(-7,0,7),              # can set the legend limits here
                            name = "Change in Days")         # can rename the legend title here
                            
