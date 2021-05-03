@@ -9,7 +9,7 @@ Description: This modest package was developed to document a new visualization t
  at 2 time points (such as pre- and post- data). The distribution of measurements at each
  time point is visualized using a half violin. Additionally, the trajectory of individual
  change is visualized by connecting these two points linearly, which can be filled to
- visualize the amount of change or other user-defined observed value. This method of
+ represent the percent of change or other user-defined observed value. This method of
  visualization is ideal for showing the true heterogeneity of data.
     The package relies on {ggplot2} to produce the visualizations. As such, the corset plot
  allows for easy integration with {ggplot2}, so that users can customize their visualizations

@@ -8,7 +8,8 @@
 #' @param y_var The repeated measure variable name.
 #' @param group The name of units measured at each time point such as 'ID'.
 #' @param c_var The name of variable to visualize by line colour, such as percent change.
-#' @param vio_fill The fill colour of the half violins. Optional (defaults to a soft black).
+#' @param vio_fill Optional (defaults to a soft black). Use to change the fill colour of the half violins.
+#' @param line_size Optional. Use to change the size (thickness) of the lines which visualize the c_var.
 #' @examples
 #' \dontrun{
 #' long.df <- c(time = c("pre","post","pre","post","pre","post",
@@ -28,7 +29,7 @@
 
 
 ## FOR LONG-FORM DATA
-gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, vio_fill = NA) {
+gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, vio_fill = NA, line_size = NA) {
 
   data <- as.data.frame(data)
   data$x_var <- data[,x_var]
@@ -38,6 +39,7 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, vio_fi
   data$c_var <- data[,c_var]
 
   vio_fill <- ifelse(is.na(vio_fill),"#0F0F0F",vio_fill)
+  line_size <- ifelse(is.na(line_size),0.25,line_size)
 
   ### plot
   corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
@@ -48,7 +50,7 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, vio_fi
 
     geom_line(mapping = aes(group = group, colour = c_var),
               position = ggstance::position_dodgev(height = 0.1),
-              size = 0.25, alpha = 1) +
+              size = line_size, alpha = 1) +
 
     gghalves::geom_half_violin(
       data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,

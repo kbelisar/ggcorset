@@ -7,7 +7,8 @@
 #' @param y_var2 The name of measured variable at time 2.
 #' @param group The name of units measured at each time point such as 'ID'.
 #' @param c_var The name of variable to visualize by line colour, such as percent change.
-#' @param vio_fill The fill colour of the half violins. Optional (defaults to a soft black).
+#' @param vio_fill Optional (defaults to a soft black). Use to change the fill colour of the half violins.
+#' @param line_size Optional. Use to change the size (thickness) of the lines which visualize the c_var.
 #' @examples
 #' \dontrun{
 #' wide.df <- c(id = c(1,2,3,4,5),
@@ -27,7 +28,7 @@
 globalVariables(c("x_axis", "y"))
 
 ## FOR WIDE-FORM DATA
-gg_corset <- function(data, y_var1, y_var2, group, c_var, vio_fill = NA) {
+gg_corset <- function(data, y_var1, y_var2, group, c_var, vio_fill = NA, line_size = NA) {
 
   data <- as.data.frame(data)
   data$y_var1 <- data[,y_var1]
@@ -43,6 +44,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, vio_fill = NA) {
                        direction = "long")
 
   vio_fill <- ifelse(is.na(vio_fill),"#0F0F0F",vio_fill)
+  line_size <- ifelse(is.na(line_size),0.25,line_size)
 
   ### plot
   corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
@@ -53,7 +55,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, vio_fill = NA) {
 
     geom_line(mapping = aes(group = group, colour = c_var),
               position = ggstance::position_dodgev(height = 0.1),
-              size = 0.25, alpha = 1) +
+              size = line_size, alpha = 1) +
 
     gghalves::geom_half_violin(
       data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,

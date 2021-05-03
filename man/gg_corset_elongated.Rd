@@ -4,7 +4,16 @@
 \alias{gg_corset_elongated}
 \title{CORSET PLOT}
 \usage{
-gg_corset_elongated(data, x_var, x_vals, y_var, group, c_var, vio_fill = NA)
+gg_corset_elongated(
+  data,
+  x_var,
+  x_vals,
+  y_var,
+  group,
+  c_var,
+  vio_fill = NA,
+  line_size = NA
+)
 }
 \arguments{
 \item{data}{The name of the data frame.}
@@ -19,7 +28,9 @@ gg_corset_elongated(data, x_var, x_vals, y_var, group, c_var, vio_fill = NA)
 
 \item{c_var}{The name of variable to visualize by line colour, such as percent change.}
 
-\item{vio_fill}{The fill colour of the half violins. Optional (defaults to a soft black).}
+\item{vio_fill}{Optional (defaults to a soft black). Use to change the fill colour of the half violins.}
+
+\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var.}
 }
 \description{
 This function visualizes a corset plot in long format.
