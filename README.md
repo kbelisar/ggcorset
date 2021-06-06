@@ -1,5 +1,8 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4905032.svg)](https://doi.org/10.5281/zenodo.4905032)
 
+
+<img align="right" width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_example2.png">
+
 # The {ggcorset} package
 
 The {ggcorset} package introduces a new visualization technique coined the 'corset plot'. It is used strictly to visualize discrete repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin. Additionally, the trajectory of individual change is visualized by connecting these two points linearly, which can be filled to visualize the magnitude of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data.
