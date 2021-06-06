@@ -85,7 +85,7 @@ drinkdays$change <- drinkdays$time2-drinkdays$time1
 **Since this data is in wide format**, the function `gg_corset()` will be used to create the corset plot using the following code:
 
 ```
-p1 <- gg_corset(drinkdays, y_var1 = "pre", y_var2 = "post", group. = "id", c_var = "change")
+p1 <- gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2", group = "id", c_var = "change")
 
 p1    # to see the initial visualization
 ```
