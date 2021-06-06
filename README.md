@@ -4,6 +4,13 @@ The {ggcorset} package introduces a new visualization technique coined the 'cors
 
 The package relies on {ggplot2} to produce the visualizations. As such, the corset plot allows for easy integration with {ggplot2}, so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
 
+## The Corset Plot - In the wild:
+
+As seen in publication: 
+
+> Minhas, M., Belisario, K., González-Roz, A., Halladay, J., Murphy, J.G. and MacKillop, J. (2021), COVID-19 impacts on drinking and mental health in emerging adults: Longitudinal changes and moderation by economic disruption and sex. Alcohol Clin Exp Res. https://doi.org/10.1111/acer.14624
+
+
 ## Installation
 
 To install the {ggcorset} package, use the {devtools} package to download directly this from GitHub repository:
