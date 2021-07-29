@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Belisario"
+  given-names: "Kyla"
+  orcid: "https://orcid.org/0000-0001-5403-9531"
+title: "ggcorset"
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2021-07-28
+url: "https://github.com/kbelisar/ggcorset"
