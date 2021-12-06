@@ -6,6 +6,6 @@ authors:
   orcid: "https://orcid.org/0000-0001-5403-9531"
 title: "Corset Plots - Visualizing Heterogeneity in Discrete Outcome Changes Across Two Timepoints"
 version: 1.0.0
-doi: 10.5281/zenodo.1234
-date-released: 2021-07-28
+doi: 10.5281/zenodo.4905032
+date-released: 2021-06-06
 url: "https://github.com/kbelisar/ggcorset"
