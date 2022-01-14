@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4905032.svg)](https://doi.org/10.5281/zenodo.4905032)
+[![R-CMD-check](https://github.com/kbelisar/ggcorset/actions/workflows/rcmd_check.yml/badge.svg)](https://github.com/kbelisar/ggcorset/actions/workflows/rcmd_check.yml) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4905032.svg)](https://doi.org/10.5281/zenodo.4905032)
 
 
 <img align="right" width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_customized.png">
