@@ -81,7 +81,7 @@ By creating a corset plot as an R object, 'ggplot2' customizations can easily be
 
 `scale_x_discrete()` - Change the labels of time1 and time2 (particularly helpful when using the `gg_corset()` function)
 
-`scale_colour_manual()` - Customize colours for the c_var variable
+`scale_colour_viridis()` - Custom colour-blind friendly colours for the c_var variable using the 'viridis' package
 
 
 ## Full Example
