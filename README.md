@@ -1,5 +1,6 @@
 ![CRAN](https://www.r-pkg.org/badges/version/ggcorset)
-![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/ggcorset)
+[![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/grand-total/ggcorset?color=yellow)](https://r-pkg.org/pkg/ggcorset)
+![CRAN RStudio mirror downloads](https://cranlogs.r-pkg.org/badges/ggcorset?color=lightgrey)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4905031.svg)](https://doi.org/10.5281/zenodo.4905031)
 
 <img align="right" width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/corset_plot_customized.png">
