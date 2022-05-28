@@ -2,19 +2,7 @@
 % Please edit documentation in R/gg_corset_elongated.R
 \name{gg_corset_elongated}
 \alias{gg_corset_elongated}
-\title{CORSET PLOT}
-\usage{
-gg_corset_elongated(
-  data,
-  x_var,
-  x_vals,
-  y_var,
-  group,
-  c_var,
-  vio_fill = NA,
-  line_size = NA
-)
-}
+\title{CORSET PLOT ELONGATED}
 \arguments{
 \item{data}{The name of the data frame.}
 
@@ -28,21 +16,40 @@ gg_corset_elongated(
 
 \item{c_var}{The name of variable to visualize by line colour, such as percent change.}
 
+\item{eyelets}{Optional (default is FALSE). If set to TRUE, this will visualize standard error means (SEM) by c_var.}
+
+\item{faceted}{Optional (default is FALSE). If set to true, the c_var will be faceted, with all lines visible in soft grey as a background in each facet.}
+
 \item{vio_fill}{Optional (defaults to a soft black). Use to change the fill colour of the half violins.}
 
-\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var.}
+\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.}
+}
+\value{
+ggplot2 graphical object
 }
 \description{
 This function visualizes a corset plot in long format.
 }
 \examples{
-\dontrun{
-long.df <- c(time = c("pre","post","pre","post","pre","post",
-             days  = c(3,5,4,0,7,7)),
+
+long.df <- data.frame(id = c(1,1,2,2,3,3),
+             time = c("pre","post","pre","post","pre","post"),
+             days  = c(3,5,4,0,7,7),
              change = c(28.57,28.57,-57.14,-57.14,0,0),
-             id = c(1,1,2,2,3,3))
+             direction = c("increase","increase","decrease","decrease","no change","no change"))
+
 gg_corset_elongated(data = long.df, x_var = "time",
                    x_vals = c("pre","post"), y_var = "days",
                    group = "id", c_var = "change")
-}
+
+## Create groupings based on direction of change to use for eyelets:
+
+gg_corset_elongated(data = long.df, x_var = "time", x_vals = c("pre","post"),
+                    y_var = "days", group = "id", c_var = "direction", eyelets = TRUE)
+
+## Create faceted corset plots based on direction of change:
+
+gg_corset_elongated(data = long.df, x_var = "time", x_vals = c("pre","post"),
+                    y_var = "days", group = "id", c_var = "direction", faceted = TRUE)
+
 }

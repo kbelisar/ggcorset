@@ -12,22 +12,41 @@
 
 \item{group}{The name of units measured at each time point such as 'ID'.}
 
-\item{c_var}{The name of variable to visualize by line colour, such as percent change.}
+\item{c_var}{The name of variable to visualize by line colour, such as percent change, magnitude of change, or direction of change.}
+
+\item{eyelets}{Optional (default is FALSE). If set to true, this will visualize standard error means (SEM) by c_var.}
+
+\item{faceted}{Optional (default is FALSE). If set to true, the c_var will be faceted, with all lines visible in soft grey as a background in each facet.}
 
 \item{vio_fill}{Optional (defaults to a soft black). Use to change the fill colour of the half violins.}
 
-\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var.}
+\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.}
+}
+\value{
+ggplot2 graphical object
 }
 \description{
 This function visualizes a corset plot in wide format.
 }
 \examples{
-\dontrun{
-wide.df <- c(id = c(1,2,3,4,5),
+
+wide.df <- data.frame(id = c(1,2,3,4,5),
              time1 = c(3,4,7,5,6),
-             time2  = c(5,5,7,3,0)),
-             change = c(28.57,14.29,0,-28.57,-85.71))
-gg_corset(data = wide.df, y_var1 = "time1",
-          y_var2 = "time2", group = "id", c_var = "change")
-}
+             time2  = c(5,5,7,3,0),
+             change = c(28.57,14.29,0,-28.57,-85.71),
+             direction = c("increase","increase","no change","decrease","decrease"))
+
+gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
+          group = "id", c_var = "change")
+
+## Create corset plots with eyelets:
+
+gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
+          group = "id", c_var = "direction", eyelets = TRUE)
+
+## Create faceted corset plots based on direction of change:
+
+gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
+          group = "id", c_var = "direction", faceted = TRUE)
+
 }
