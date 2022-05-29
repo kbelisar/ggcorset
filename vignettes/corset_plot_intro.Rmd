@@ -63,7 +63,7 @@ plot <- gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2",
 
 # ADDITIONAL ggplot2 commands
 plot + 
-  # Changes legend title, and choose a colour-palette
+  # Changes legend title, and selects a colour-palette
   scale_colour_manual("Direction of Change",
                     values = MetBrewer::met.brewer("Ingres",3)) +
   # Changes the plot title
