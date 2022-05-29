@@ -143,6 +143,6 @@ By plotting the distal outcome of drinking days by a latent class, we are able t
 
 ^1^ https://github.com/kbelisar/ggcorset/blob/main/README.md
 
-^2^ https://cran.r-project.org/web/packages/ggcorset/ggcorset.pdf
+^2^ https://CRAN.R-project.org/package=ggcorset
 
 ^3^ The "drinkdays" data from the 'ggcorset' package are simulated data. Age and latent classes (not available in the package) are also simulated categories to demonstrate the possible uses of `c_var`, and are based on trends observed in the research of substance use.
