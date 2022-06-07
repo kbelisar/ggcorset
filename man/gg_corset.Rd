@@ -14,7 +14,9 @@
 
 \item{c_var}{The name of variable to visualize by line colour, such as percent change, magnitude of change, or direction of change.}
 
-\item{eyelets}{Optional (default is FALSE). If set to true, this will visualize standard error means (SEM) by c_var.}
+\item{eyelets}{Optional (default is FALSE). If set to true, this will visualize one of two mean types by c_var, as defined by the 'e_type' argument.}
+
+\item{e_type}{Optional eyelet type if the eyelets parameter is set to TRUE. One of "SE" or "SD". The default is standard error ("SE") means. Alternatively, standard deviations ("SD") with means can be specified, which include horizontal lines to denote +1 and -1 standard deviation. Note that the visualization of standard deviations works best in tandem with the faceted option.}
 
 \item{faceted}{Optional (default is FALSE). If set to true, the c_var will be faceted, with all lines visible in soft grey as a background in each facet.}
 
@@ -48,5 +50,10 @@ gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
 
 gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
           group = "id", c_var = "direction", faceted = TRUE)
+
+## Create faceted corset plots with standard deviation eyelets:
+
+gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2", group = "id",
+          c_var = "direction", e_type = "SE", faceted = TRUE)
 
 }
