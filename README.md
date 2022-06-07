@@ -20,7 +20,7 @@ Addition of optional 'eyelets' which visualize the standard error mean of user-d
 <img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
-Additionally, the GitHub version includes the addition of an eyelet type which visualizes 1 standard deviation above and below the mean (using the optional e_type = "SE" argument). Note this feature is most interpretable when using the faceted option.
+Additionally, the GitHub version includes the option of an eyelet type which visualizes 1 standard deviation above and below the mean (using the optional e_type = "SE" argument). Note this feature is most interpretable when using the faceted option.
 
 <p align="center">
 <img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_sd_eyelets_age.png">
