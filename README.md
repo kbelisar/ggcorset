@@ -4,7 +4,7 @@
 [![R-CMD-check](https://github.com/kbelisar/ggcorset/actions/workflows/r_cmd_check.yml/badge.svg)](https://github.com/kbelisar/ggcorset/actions/workflows/r_cmd_check.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4905031.svg)](https://doi.org/10.5281/zenodo.4905031)
 
-<img align="right" width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_categorical.png">
+<img align="right" width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_eyelets.png">
 
 # The 'ggcorset' package
 
