@@ -4,16 +4,18 @@
 [![R-CMD-check](https://github.com/kbelisar/ggcorset/actions/workflows/r_cmd_check.yml/badge.svg)](https://github.com/kbelisar/ggcorset/actions/workflows/r_cmd_check.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4905031.svg)](https://doi.org/10.5281/zenodo.4905031)
 
-<img align="right" width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_eyelets.png">
-
 # The 'ggcorset' package
+
+<img align="right" width="475" height="325" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_categorical.png">
 
 The 'ggcorset' package introduces a visualization technique coined the corset plot. It is used strictly to visualize repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin, whilst the trajectories of individual change are visualized via spaghetti plots by connecting these two points linearly. These lines can be filled to visualize the magnitude of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data, including differences by sub-groups.
 
 The package relies on the '[ggplot2](https://github.com/tidyverse/ggplot2])' package to produce the visualizations. As such, the corset plot allows for easy integration with 'ggplot2', so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
 
+The 'ggcorset' package allows for easy customization by offering different descriptive features by group. Specifically, 'eyelets' can be used to show either standard error means (SEM) or the mean +/- 1 standard deviation by group, and 'faceted' corsets can be used highlight the distributions of each group.
+
 <p align="center">
-<img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
+<img width="700" height="450" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
 ## New Features for v0.3.0
@@ -167,7 +169,7 @@ plot +
 This plot was solely created using the example data set and the code used in the example above:
 
 <p align="center">
-<img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_continuous.png">
+<img width="700" height="450" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_continuous.png">
 </p>
 
 Additional corset plot examples and uses can be found in detail in the CRAN [vignette](https://cran.r-project.org/web/packages/ggcorset/vignettes/corset_plot_intro.html).
