@@ -37,7 +37,7 @@
 #' ## Create faceted corset plots with standard deviation eyelets:
 #'
 #' gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2", group = "id",
-#'           c_var = "direction", e_type = "SE", faceted = TRUE)
+#'           c_var = "direction", e_type = "SD", faceted = TRUE)
 #'
 #' @importFrom dplyr %>% filter summarize group_by select
 #' @importFrom ggplot2 ggplot geom_point geom_pointrange geom_errorbar geom_line aes position_dodge position_nudge theme_classic facet_wrap
@@ -236,8 +236,8 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
         position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
 
       geom_line(data = data.long2, mapping = aes(group = group), colour = "#B3B3B3",
-        position = ggstance::position_dodgev(height = 0.1),
-        size = line_size, alpha = 1) +
+                position = ggstance::position_dodgev(height = 0.1),
+                size = line_size, alpha = 1) +
 
       geom_line(aes(group = group, colour = c_var),
                 position = ggstance::position_dodgev(height = 0.1),

@@ -40,7 +40,7 @@
 #'
 #' gg_corset_elongated(data = long.df, x_var = "time", x_vals = c("pre","post"),
 #'                     y_var = "days", group = "id", c_var = "direction",
-#'                     e_type = "SE", faceted = TRUE)
+#'                     e_type = "SD", faceted = TRUE)
 #'
 #' @importFrom dplyr %>% filter summarize group_by select
 #' @importFrom ggplot2 ggplot geom_point geom_pointrange geom_errorbar geom_line aes position_dodge position_nudge theme_classic facet_wrap
@@ -69,19 +69,19 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
 
     corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
 
-    geom_line(mapping = aes(group = group, colour = c_var),
-              position = ggstance::position_dodgev(height = 0.1),
-              size = line_size, alpha = 1) +
+      geom_line(mapping = aes(group = group, colour = c_var),
+                position = ggstance::position_dodgev(height = 0.1),
+                size = line_size, alpha = 1) +
 
-    gghalves::geom_half_violin(
-      data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
-      position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+      gghalves::geom_half_violin(
+        data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
 
-    gghalves::geom_half_violin(
-      data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
-      position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+      gghalves::geom_half_violin(
+        data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
 
-    theme_classic()
+      theme_classic()
 
   }
 
@@ -134,9 +134,9 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
       corset_plot <- corset_plot +
 
         geom_pointrange(
-        data = data.summ %>% filter(x_var == x_vals[1]),
-        mapping = aes(x = x_var, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-        position = position_nudge(x = -0.05, y = 0), size = 1, show.legend = F) +
+          data = data.summ %>% filter(x_var == x_vals[1]),
+          mapping = aes(x = x_var, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
+          position = position_nudge(x = -0.05, y = 0), size = 1, show.legend = F) +
 
         geom_pointrange(
           data = data.summ %>% filter(x_var == x_vals[2]),
@@ -254,15 +254,15 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
 
       corset_plot <- corset_plot +
 
-      geom_pointrange(
-        data = data.summ %>% filter(x_var == x_vals[1]),
-        mapping = aes(x = x_var, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-        position = position_nudge(x = -0.075, y = 0), size = 1, show.legend = F) +
+        geom_pointrange(
+          data = data.summ %>% filter(x_var == x_vals[1]),
+          mapping = aes(x = x_var, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
+          position = position_nudge(x = -0.075, y = 0), size = 1, show.legend = F) +
 
-      geom_pointrange(
-        data = data.summ %>% filter(x_var == x_vals[2]),
-        mapping = aes(x = x_var, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-        position = position_nudge(x = 0.075, y = 0), size = 1, show.legend = F)
+        geom_pointrange(
+          data = data.summ %>% filter(x_var == x_vals[2]),
+          mapping = aes(x = x_var, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
+          position = position_nudge(x = 0.075, y = 0), size = 1, show.legend = F)
 
     }
 

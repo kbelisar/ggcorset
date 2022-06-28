@@ -58,6 +58,6 @@ gg_corset_elongated(data = long.df, x_var = "time", x_vals = c("pre","post"),
 
 gg_corset_elongated(data = long.df, x_var = "time", x_vals = c("pre","post"),
                     y_var = "days", group = "id", c_var = "direction",
-                    e_type = "SE", faceted = TRUE)
+                    e_type = "SD", faceted = TRUE)
 
 }

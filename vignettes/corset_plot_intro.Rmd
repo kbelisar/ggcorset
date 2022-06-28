@@ -1,8 +1,8 @@
 ---
-title: "The 'ggcorset' package"
+title: "Introduction to Corset Plots"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{The 'ggcorset' package}
+  %\VignetteIndexEntry{Introduction to Corset Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,19 +25,55 @@ The **c_var** variable is a user-defined variable that make the individual-level
 
 A corset plot consists of: 
 
-i) two half violins to highlight the overall distribution at each time point; 
+i) distribution at each time point using half violins (overall distributions or distributions by group); 
 
 ii) individual trajectories of change between each time point; and optionally 
 
-iii) 'eyelets' which show the standard error mean (SEM) of a user-defined group
+iii) 'eyelets' showing either the standard error mean (SEM), or mean +/- 1 standard deviation (SD) by group
 
 
-<center>
+```{r, echo=FALSE, out.width=650}
 
-![](img/example_corset_plot_anatomy.png){width="650"}
-</center>
+library(ggcorset)
+library(ggplot2)
 
-The plot above was created using the sample ggcorset data "drinkdays", and by creating a variable which captures the direction of change across the two timepoints. The `theme_ggcorset()` was used to polish the visualization alongside a few ggplot2 commands to customize the titles and axes.
+# LOAD "drinkdays" data from the ggcorset package
+data("drinkdays")
+
+# Magnitude of change: Subtract T1 from T2
+drinkdays$change <- drinkdays$time2-drinkdays$time1
+
+# Direction of Change
+drinkdays$direction <- ifelse(drinkdays$change<0,"Decrease",
+                              ifelse(drinkdays$change>0,"Increase","No Change"))
+drinkdays$direction <- factor(drinkdays$direction, 
+                              levels = c("Increase","No Change","Decrease"))
+
+# CORSET PLOT: Basic plot + theme_ggcorset()
+plot <- gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2", 
+                  c_var = "direction", group = "id", eyelets = T) + 
+        theme_ggcorset()
+
+# ADDITIONAL ggplot2 commands
+plot + 
+  # Changes legend title, and selects a colour-palette
+  scale_colour_manual("Direction of Change",
+                    values = MetBrewer::met.brewer("Ingres",3)) +
+  # Changes the plot title
+  ggtitle("Change in Drinking Days") + 
+  # Changes the y-axis title
+  ylab("Number of Drinking Days per Week") + 
+  # Changes the x-axis title (removes in favour of the 2 time point labels below)
+  xlab("") +
+  # Changes the labels of the 2 time points (on the x-axis)
+  scale_x_discrete(labels = c("Pre","Post")) +
+  # Makes the legend lines thicker
+  guides(colour = guide_legend(override.aes = list(size = 3)))
+
+```
+
+
+The plot above was created using the sample ggcorset data "drinkdays", and by creating a variable which captures the direction of change across the two time points. The `theme_ggcorset()` was used to polish the visualization alongside a few ggplot2 commands to customize the titles and axes, as denoted below:
 
 ```{r, fig.show='hide'}
 
@@ -81,7 +117,7 @@ plot +
 
 ## Faceted Corset Plots
 
-Corset plots can also be faceted using the `faceted = T` argument, whereby all individual trajectories are used in the background of the plot. Eyelets can be used in conjunction with the faceted corset plots, if desired.
+Corset plots can also be faceted using the faceted = T argument, whereby all individual trajectories are used in the background of the plot. In faceted corset plots, the distribution of each group are visualized in each facet, allowing for the change in distribution over the two time points by group to be the primary focus. Eyelets can be used in conjunction with the faceted corset plots, if desired.
 
 ```{r,out.width=650}
 
@@ -89,13 +125,14 @@ gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2",
           c_var = "direction", group = "id", faceted = T) + 
   theme_ggcorset() +  
   scale_colour_manual("Direction of Change",
-                      values = MetBrewer::met.brewer("Troy",3))  +
+                      values = MetBrewer::met.brewer("Demuth",3))  +
   ggtitle("Change in Drinking Days") + 
   ylab("Number of Drinking Days per Week") + xlab("") +
   scale_x_discrete(labels = c("Pre","Post")) +
   guides(colour = guide_legend(override.aes = list(size = 3)))
 
 ```
+
 
 ## Continuous Change Values
 
@@ -120,22 +157,57 @@ gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2",
 
 As noted previously, corset plots are a great way to visualize heterogeneity amongst data. Thus, the magnitude of homogeneity across groups can be inspected by using a `c_var` variable for observed or latent sub-groups. Some examples using simulated^3^ data from the "drinkdays" data set are age categories and latent classes (derived from a latent class analysis).
 
-In the first example, individuals were categorized by young adults (29 years of age and younger) and adults (30 years of age and older). Young adults often partake in heavy episodic drinking, a phenomenon whereby individuals 'age out' of risky drinking behaviours over time. As seen in the faceted corset plots, those under 30 years of age are seeing decreases in their number of drinking days per week, compared to those 30 years of age and older who are more stable in their drinking days over time. 
+In the first example, individuals were categorized by young adults (29 years of age and younger) and adults (30 years of age and older). Young adults often partake in heavy episodic drinking, a phenomenon whereby individuals 'age out' of risky drinking behaviours over time. As seen in the faceted corset plots, those under 30 years of age are seeing decreases in their number of drinking days per week, compared to those 30 years of age and older who are more stable in their drinking days over time.
 
-<center>
+```{r, echo=FALSE, out.width=650}
 
-![](img/example_corset_plot_age.png){width="525"}
+### SUBGROUPS
 
-</center>
+drinkdays$age <- c(1,2,1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,2,1,2,2,1,1,1,1,1,2,1,1,2,2,1,2,2,2,1,2,2,2,1,1,1,1,1,2,1,1,1,1,1,1,1,2,1,1,1,1,2,1,1,1,2,1,1,2,2,1,2,2,2,1,1,1,1,2,1,2,1,1,1,2,1,1,2,1,2,1,1,1,1,1,2,1,1,1,2,1,2,2,2,2,2,2,1,1,1,2,1,1,1,2,2,2,1,1,2,1,1,1,2,1,1,2,1,2,2,1,2,1,1,1,1,1,1,1,1,2,1,2,2,1,1,2,1,2,1,1,1,2,1,1,2,1,1,1,1,1,2,1,2,2,1,2,1,2,1,1,1,2,1,1,2,2,1,1,1,1,1,1,1,2,1,1,1,1,2,1,1,2,1,1,2,1,1,1,2,1,1,1,1,2,2,1,1,1,2,2,1,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1,2,1,1,2,1,1,1,2,1,1,1,2,2,1,2,2,2,2,2,1,2,1,1,2,1,1,1,1,2,1,2,2,2,1,2,1,1,1,1,1,1,2,1,1,1,1,2,2,2,1,1,1,1,1,2,1,1,2,2,1,2,2,1,1,1,1,2,1,1,1,1,1,1,1,1,1,1)
+
+drinkdays$age <- ifelse(drinkdays$age==1,"<30","30+")
+
+
+gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2", c_var = "age",
+          group = "id", faceted = T, eyelets = T, e_type = "SD") + theme_ggcorset() +
+  xlab("") +  scale_colour_manual("",
+                                  values = MetBrewer::met.brewer("Morgenstern",2)) +
+ggtitle("Change in Drinking Days by Age Group",
+) +
+  ylab("Number of Drinking Days per Week") +
+  xlab("") +
+  scale_x_discrete(labels = c("Pre","Post")) +
+  guides(colour = guide_legend(override.aes = list(size = 3)))
+
+```
+
 
 By plotting the data using corset plots, we are able to see the heterogeneity still present by age categories, notably how some <30 adults are maintaining their drinking levels and those 30+ have increased in some instances.
 
-In the second example, individuals are categorized into three latent classes which were obtained by numerous drinking and mental health outcomes. The corset plots are visualizing distal outcomes of drinking days by these latent classes. Class 1 shows a notable decrease in drinking days; Class 2 shows an overall increase, with many individuals showing no change in their alcohol use; and Class 3 shows a decrease, but is less drastic than Class 1, whereby change is largely by a magnitude of 1 day and no individuals consumed alcohol 7-days a week.
+In the second example, individuals are categorized into three latent classes which were obtained by numerous drinking and mental health outcomes. The corset plots are visualizing distal outcomes of drinking days by these latent classes. Class 1 shows a notable decrease in drinking days (a decrease of 4 days on average); Class 2 shows an overall increase, with many individuals showing no change in their alcohol use; and Class 3 shows a less drastic decrease in drinking days than Class 1, whereby the overall decrease is 2 days per week (with many individuals in the class seeing a change in magnitude of 1 day), and no individuals consumed alcohol 7-days a week.
 
-<center>
 
-![](img/example_corset_plot_latentclass.png){width="525"}
-</center>
+```{r, echo=FALSE, out.width=650}
+
+### LATENT CLASSES
+
+drinkdays$class <- c(3,3,3,1,3,3,1,3,3,1,3,2,3,3,2,2,2,2,1,3,1,3,3,3,3,2,2,1,3,2,2,3,2,2,2,1,3,3,1,3,3,3,1,2,2,3,3,3,1,3,3,3,2,3,2,3,3,3,3,2,2,2,1,3,2,3,3,3,2,3,3,3,1,3,2,3,2,2,3,3,3,3,1,1,2,3,3,3,2,2,2,3,1,3,3,3,2,2,2,2,2,2,1,2,1,2,1,3,1,2,2,2,3,3,3,3,2,3,2,3,1,2,3,3,3,2,3,3,3,2,2,1,3,1,2,2,3,1,2,3,3,3,3,3,1,2,3,2,1,2,2,3,2,3,1,3,2,3,3,3,1,1,3,3,2,3,3,1,2,3,3,3,2,2,2,3,2,2,1,1,2,1,3,1,3,2,1,3,2,3,3,2,3,2,1,3,3,3,2,3,2,2,2,2,3,1,3,3,1,3,3,1,3,3,2,3,1,3,3,1,2,3,3,2,3,3,3,3,2,3,1,3,1,1,2,2,3,3,2,2,2,2,3,2,3,2,2,1,1,3,2,3,3,2,2,2,3,2,3,1,1,1,2,3,1,3,1,3,1,3,2,3,1,1,3,3,2,2,3,1,2,3,1,2,3,3,3,3,2,3,3,3,1,2,1,3,3,2,2,3)
+
+drinkdays$class <- factor(drinkdays$class,levels = c(1,2,3),
+                          labels = c("Class 1 (25.7%)","Class 2 (31.0%)", "Class 3 (43.3%)"))
+
+gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2", c_var = "class",
+          group = "id", faceted = T, eyelets = T) + theme_ggcorset() +
+  xlab("") +  scale_colour_manual("",
+                                  values = MetBrewer::met.brewer("Kandinsky",3, direction = 1)) +
+  ggtitle("Change in Drinking Days by Latent Class",
+  ) +
+  ylab("Number of Drinking Days per Week") +
+  xlab("") +
+  scale_x_discrete(labels = c("Pre","Post")) +
+  guides(colour = "none")
+
+```
 
 By plotting the distal outcome of drinking days by a latent class, we are able to see how well these latent classes were able to predict drinking outcomes - in this instance, drinking days per week.
 
@@ -143,6 +215,6 @@ By plotting the distal outcome of drinking days by a latent class, we are able t
 
 ^1^ https://github.com/kbelisar/ggcorset/blob/main/README.md
 
-^2^ https://CRAN.R-project.org/package=ggcorset
+^2^ https://cran.r-project.org/package=ggcorset
 
 ^3^ The "drinkdays" data from the 'ggcorset' package are simulated data. Age and latent classes (not available in the package) are also simulated categories to demonstrate the possible uses of `c_var`, and are based on trends observed in the research of substance use.

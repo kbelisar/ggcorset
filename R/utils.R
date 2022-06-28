@@ -1,7 +1,7 @@
-#' GGCORSET_THEME
+#' THEME_GGCORSET
 #'
 #' This function offers a ggplot theme to make visualizations more polished.
-#' @name ggcorset_theme
+#' @name theme_ggcorset
 #' @return ggplot2 theme
 #' @examples
 #'

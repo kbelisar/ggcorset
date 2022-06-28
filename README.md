@@ -12,20 +12,13 @@ The 'ggcorset' package introduces a visualization technique coined the corset pl
 
 The package relies on the '[ggplot2](https://github.com/tidyverse/ggplot2])' package to produce the visualizations. As such, the corset plot allows for easy integration with 'ggplot2', so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
 
-## New Features for v 0.2.0
-
-Addition of optional 'eyelets' which visualize the standard error mean of user-defined groups (as seen in the figure above); optional faceting to better compare groups (figure below); as well as an added ggplot2 theme to quickly polish the visualization.
-
 <p align="center">
 <img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
-Additionally, the GitHub version includes the option of an eyelet type which visualizes 1 standard deviation above and below the mean (using the optional e_type = "SD" argument). Note this feature is most interpretable when using the faceted option.
+## New Features for v0.3.0
 
-<p align="center">
-<img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_sd_eyelets_age.png">
-</p>
-
+Optional 'eyelets' (first added in version 0.2.0), now include different eyelet types in this new release. Specifically, the standard error mean (SEM) or 1 standard deviation above and below the mean can be visualized, by specifying either "SE" or "SD", respectively.
 
 ## Installation
 
@@ -68,7 +61,7 @@ This function is used to create a corset plot with data in the wide format. It t
 
 `eyelets` = optional argument (defaults to FALSE) which creates either standard error means for the c_var (default) or 1 standard deviation above/ below the mean as defined by the 'e_type` argument
 
-`e_type` = optional argument when `eyelets` is set to TRUE. One of "SE" (default) or "SD" [[Currently Available for the GitHub version only]]
+`e_type` = optional argument when `eyelets` is set to TRUE. One of "SE" (default) or "SD"
 
 `faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var with soft grey lines denoting entire sample trajectories
 
@@ -95,7 +88,7 @@ This function is used to create a corset plot with data in the long format. It t
 
 `eyelets` = optional argument (defaults to FALSE) which creates standard error means for the c_var (default) or 1 standard deviation above/ below the mean as defined by the 'e_type` argument
 
-`e_type` = optional argument when `eyelets` is set to TRUE. One of "SE" (default) or "SD" [[Currently Available for the GitHub version only]]
+`e_type` = optional argument when `eyelets` is set to TRUE. One of "SE" (default) or "SD"
 
 `faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var with soft grey lines denoting entire sample trajectories
 
@@ -176,3 +169,5 @@ This plot was solely created using the example data set and the code used in the
 <p align="center">
 <img width="600" height="400" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_continuous.png">
 </p>
+
+Additional corset plot examples and uses can be found in detail in the CRAN [vignette](https://cran.r-project.org/web/packages/ggcorset/vignettes/corset_plot_intro.html).

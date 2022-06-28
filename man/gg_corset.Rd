@@ -54,6 +54,6 @@ gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
 ## Create faceted corset plots with standard deviation eyelets:
 
 gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2", group = "id",
-          c_var = "direction", e_type = "SE", faceted = TRUE)
+          c_var = "direction", e_type = "SD", faceted = TRUE)
 
 }
