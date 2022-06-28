@@ -6,7 +6,7 @@
 
 # The 'ggcorset' package
 
-<img align="right" width="475" height="325" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_categorical.png">
+<img align="right" width="475" height="325" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_eyelets.png">
 
 The 'ggcorset' package introduces a visualization technique coined the corset plot. It is used strictly to visualize repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin, whilst the trajectories of individual change are visualized via spaghetti plots by connecting these two points linearly. These lines can be filled to visualize the magnitude of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data, including differences by sub-groups.
 
