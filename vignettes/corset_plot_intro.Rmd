@@ -117,12 +117,12 @@ plot +
 
 ## Faceted Corset Plots
 
-Corset plots can also be faceted using the faceted = T argument, whereby all individual trajectories are used in the background of the plot. In faceted corset plots, the distribution of each group are visualized in each facet, allowing for the change in distribution over the two time points by group to be the primary focus. Eyelets can be used in conjunction with the faceted corset plots, if desired.
+Corset plots can also be faceted using the faceted = T argument, and all individual trajectories can be used in the background of the plot if facet_design = "line" is used. In faceted corset plots, the distribution of each group are visualized in each facet, allowing for the change in distribution over the two time points by group to be the primary focus. Eyelets can be used in conjunction with the faceted corset plots, if desired.
 
 ```{r,out.width=650}
 
 gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2",
-          c_var = "direction", group = "id", faceted = T) + 
+          c_var = "direction", group = "id", faceted = T, facet_design = "line") + 
   theme_ggcorset() +  
   scale_colour_manual("Direction of Change",
                       values = MetBrewer::met.brewer("Demuth",3))  +
@@ -197,7 +197,7 @@ drinkdays$class <- factor(drinkdays$class,levels = c(1,2,3),
                           labels = c("Class 1 (25.7%)","Class 2 (31.0%)", "Class 3 (43.3%)"))
 
 gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2", c_var = "class",
-          group = "id", faceted = T, eyelets = T) + theme_ggcorset() +
+          group = "id", faceted = T, facet_design = "line", eyelets = T) + theme_ggcorset() +
   xlab("") +  scale_colour_manual("",
                                   values = MetBrewer::met.brewer("Kandinsky",3, direction = 1)) +
   ggtitle("Change in Drinking Days by Latent Class",

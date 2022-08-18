@@ -18,6 +18,10 @@ The 'ggcorset' package allows for easy customization by offering different descr
 <img width="700" height="450" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
+## New GitHub-Exclusive Features v0.3.5
+
+Different faceting styles to allow for more customization via the `facet_design` argument. The default is "original". The "line" option visualizes all individual trajectories in the background of each faceted corset using a soft grey (or other colour as specified by `line_fill`). More features to come in later releases.
+
 ## New Features for v0.3.0
 
 Optional 'eyelets' (first added in version 0.2.0), now include different eyelet types in this new release. Specifically, the standard error mean (SEM) or 1 standard deviation above and below the mean can be visualized, by specifying either "SE" or "SD", respectively.
@@ -65,11 +69,15 @@ This function is used to create a corset plot with data in the wide format. It t
 
 `e_type` = optional argument when `eyelets` is set to TRUE. One of "SE" (default) or "SD"
 
-`faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var with soft grey lines denoting entire sample trajectories
+`faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var
+
+`facet_design` = defaults to "original" when `faceted` is set to TRUE. One of "original", or "line" which uses soft grey lines denoting entire sample trajectories in each facet
 
 `vio_fill` = optional argument to change the fill colour of the half violins (defaults to a soft black)
 
 `line_size` = optional argument to change the size (thickness) of the lines (default is 0.25)
+
+`line_col` = optional argument when `facet_design` is set to "line" to change the colour of the background group lines
 
 
 ### gg_corset_elongated()
@@ -94,9 +102,14 @@ This function is used to create a corset plot with data in the long format. It t
 
 `faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var with soft grey lines denoting entire sample trajectories
 
+`facet_design` = defaults to "original" when `faceted` is set to TRUE. One of "original", or "line" which uses soft grey lines denoting entire sample trajectories in each facet
+
 `vio_fill` = optional argument to change the fill colour of the half violins (defaults to a soft black)
 
 `line_size` = optional argument to change the size (thickness) of the lines (default is 0.25)
+
+`line_col` = optional argument when `facet_design` is set to "line" to change the colour of the background group lines
+
 
 ### theme_ggcorset()
 
