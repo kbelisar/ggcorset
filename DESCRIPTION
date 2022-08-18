@@ -1,7 +1,7 @@
 Package: ggcorset
 Type: Package
 Title: The Corset Plot
-Version: 0.3.5
+Version: 0.3.0
 Author: Kyla Belisario
 Maintainer: Kyla Belisario <kyla_belisario@protonmail.com>
 Description: Corset plots are a visualization technique used strictly to visualize repeat measures 
