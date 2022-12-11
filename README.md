@@ -18,7 +18,7 @@ The 'ggcorset' package allows for easy customization by offering different descr
 <img width="700" height="450" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
-## New Features for v0.4.0
+## New Features for v0.4.0 (Now Available on CRAN!)
 
 Additional faceting options are available for more customization via the `facet_design` argument. The default is "original", which only facets the corset plot by 'c_var'. The second option is "line" which visualizes all individual trajectories in the background of each faceted corset using a soft grey (or other colour as specified by `line_fill`). The third option is "group" which adds a semi-opaque distribution of the `c_var` ontop of the overall distribution.
 
@@ -42,7 +42,7 @@ Examples of corset plots in use, can be seen in the following publications:
 
 > Minhas, M., Belisario, K., González-Roz, A., Halladay, J., Murphy, J.G. and MacKillop, J. (2021), COVID-19 impacts on drinking and mental health in emerging adults: Longitudinal changes and moderation by economic disruption and sex. Alcohol Clin Exp Res. https://doi.org/10.1111/acer.14624
 
-> González-Roz, A., Haik, A. K., Rahman, L., Todi, A. A., Kane, C., Walji, A., Dickerman S. R., Scarfe, M., Levitt E. E., Belisario, K., Kelly, J. F., & MacKillop, J. (2022) Impacts of the COVID-19 public health restrictions on substance use, mental health, and psychosocial functioning among individuals with alcohol use disorder, The American Journal of Drug and Alcohol Abuse, 48:6, 712-723, DOI: 10.1080/00952990.2022.2134021
+> González-Roz, A., Haik, A. K., Rahman, L., Todi, A. A., Kane, C., Walji, A., Dickerman S. R., Scarfe, M., Levitt E. E., Belisario, K., Kelly, J. F., & MacKillop, J. (2022) Impacts of the COVID-19 public health restrictions on substance use, mental health, and psychosocial functioning among individuals with alcohol use disorder, The American Journal of Drug and Alcohol Abuse, 48:6, 712-723, https://doi.org/10.1080/00952990.2022.2134021
 
 
 ## The ggcorset functions
