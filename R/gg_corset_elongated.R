@@ -102,7 +102,7 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
       # calculating 1 standard deviation
       data.summ <- data %>% group_by(c_var, x_var) %>%
         summarize(mean_y = mean(y_var, na.rm = TRUE),
-                  sd_se = sqrt(var(y_var[!is.na(y_var)])/length(y_var[!is.na(y_var)])))
+                  sd_se = sqrt(var(y_var,na.rm = T)))
     }
 
     # change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD
@@ -271,7 +271,7 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
       # calculating 1 standard deviation
       data.summ <- data %>% group_by(c_var, x_var) %>%
         summarize(mean_y = mean(y_var, na.rm = TRUE),
-                  sd_se = sqrt(var(y_var[!is.na(y_var)])/length(y_var[!is.na(y_var)])))
+                  sd_se = sqrt(var(y_var,na.rm = T)))
     }
 
     # change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD

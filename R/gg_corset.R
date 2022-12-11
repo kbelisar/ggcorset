@@ -104,7 +104,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       # calculating 1 standard deviation
       data.summ <- data.long %>% group_by(c_var, x_axis) %>%
         summarize(mean_y = mean(y, na.rm = TRUE),
-                  sd_se = sqrt(var(y[!is.na(y)])/length(y[!is.na(y)])))
+                  sd_se = sqrt(var(y,na.rm = T)))
     }
 
     # change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD
@@ -267,7 +267,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
     if(e_type=="SD"){
       data.summ <- data.long %>% group_by(c_var, x_axis) %>%
         summarize(mean_y = mean(y, na.rm = TRUE),
-                  sd_se = sqrt(var(y[!is.na(y)])/length(y[!is.na(y)])))
+                  sd_se = sqrt(var(y,na.rm = T)))
     }
 
     # change to 0 if only 1 observation is present, as NAs will be produced for SEM/ SD
