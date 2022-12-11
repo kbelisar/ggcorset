@@ -12,7 +12,7 @@
 
 \item{y_var}{The repeated measure variable name.}
 
-\item{group}{The name of units measured at each time point such as 'ID'.}
+\item{group}{The name of units measured at each time point such as 'ID'. The trajectories of these units are visualized by the lines of the corset plot.}
 
 \item{c_var}{The name of variable to visualize by line colour, such as percent change.}
 
@@ -22,13 +22,13 @@
 
 \item{faceted}{Optional (default is FALSE). If set to true, the c_var will be faceted.}
 
-\item{facet_design}{Optional facet type when the faceted parameter is set to TRUE. One of "original" or "line". The default is "original", which provides facets void of any special features. The "line" option includes all group trajectories in the background of each facet using a soft grey (default) or custom colour as chosen by 'line_col' argument.}
+\item{facet_design}{Optional facet type when the faceted parameter is set to TRUE. One of "original","group", or "line". The default is "original", which provides facets void of any special features. The "group" option includes the overall distribution of the entire sample in the background of each facet (which defaults to the 'vio_fill' colour), alongside each distribution for each c_var group. The "line" option includes all individual trajectories in the background of each facet using a soft grey (default) or custom colour as chosen by 'line_col' argument.}
 
 \item{vio_fill}{Optional (defaults to a soft black). Use to change the fill colour of the half violins.}
 
 \item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.}
 
-\item{line_col}{Optional custom colour of the background group lines when the facet_design is set to "line". Defaults to a soft grey.}
+\item{line_col}{Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.}
 }
 \value{
 ggplot2 graphical object

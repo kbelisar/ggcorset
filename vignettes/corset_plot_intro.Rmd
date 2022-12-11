@@ -25,7 +25,7 @@ The **c_var** variable is a user-defined variable that make the individual-level
 
 A corset plot consists of: 
 
-i) distribution at each time point using half violins (overall distributions or distributions by group); 
+i) distribution at each time point using half violins (overall distributions and/ or distributions by group); 
 
 ii) individual trajectories of change between each time point; and optionally 
 
@@ -68,7 +68,7 @@ plot +
   # Changes the labels of the 2 time points (on the x-axis)
   scale_x_discrete(labels = c("Pre","Post")) +
   # Makes the legend lines thicker
-  guides(colour = guide_legend(override.aes = list(size = 3)))
+  guides(colour = guide_legend(override.aes = list(linewidth = 3)))
 
 ```
 
@@ -111,13 +111,32 @@ plot +
   # Changes the labels of the 2 time points (on the x-axis)
   scale_x_discrete(labels = c("Pre","Post")) +
   # Makes the legend lines thicker
-  guides(colour = guide_legend(override.aes = list(size = 3)))
+  guides(colour = guide_legend(override.aes = list(linewidth = 3)))
 
 ```
 
 ## Faceted Corset Plots
 
-Corset plots can also be faceted using the faceted = T argument, and all individual trajectories can be used in the background of the plot if facet_design = "line" is used. In faceted corset plots, the distribution of each group are visualized in each facet, allowing for the change in distribution over the two time points by group to be the primary focus. Eyelets can be used in conjunction with the faceted corset plots, if desired.
+Corset plots can also be faceted using the `faceted = TRUE` argument. There are 3 design options available using the `facet_design`. Eyelets can be used in conjunction with the faceted corset plots, if desired. The default `facet_design` is "original" which simply facets the corset plots by the `c_var`. 
+
+The "group" option allows for the overall distribution to be plotted in the same colour as the `vio_fill` whilst a semi-opaque distribution of the `c_var` is situated ontop the overall distribution. 
+
+```{r,out.width=650}
+
+gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2",
+          c_var = "direction", group = "id", faceted = T, facet_design = "group") + 
+  theme_ggcorset() +  
+  scale_colour_manual("Direction of Change",
+                      values = MetBrewer::met.brewer("Demuth",3, direction = -1))  +
+  scale_fill_manual(values = MetBrewer::met.brewer("Demuth",3, direction = -1))  +
+  ggtitle("Change in Drinking Days") + 
+  ylab("Number of Drinking Days per Week") + xlab("") +
+  scale_x_discrete(labels = c("Pre","Post")) +
+  guides(colour = guide_legend(override.aes = list(linewidth = 3)))
+
+```
+
+The "line" option displays all individual trajectories in the background of each facet. This allows for the change in distribution over the two time points by group to be the primary focus.
 
 ```{r,out.width=650}
 
@@ -129,7 +148,7 @@ gg_corset(drinkdays, y_var1 = "time1", y_var2 = "time2",
   ggtitle("Change in Drinking Days") + 
   ylab("Number of Drinking Days per Week") + xlab("") +
   scale_x_discrete(labels = c("Pre","Post")) +
-  guides(colour = guide_legend(override.aes = list(size = 3)))
+  guides(colour = guide_legend(override.aes = list(linewidth = 3)))
 
 ```
 
@@ -177,7 +196,7 @@ ggtitle("Change in Drinking Days by Age Group",
   ylab("Number of Drinking Days per Week") +
   xlab("") +
   scale_x_discrete(labels = c("Pre","Post")) +
-  guides(colour = guide_legend(override.aes = list(size = 3)))
+  guides(colour = guide_legend(override.aes = list(linewidth = 3)))
 
 ```
 

@@ -10,7 +10,7 @@
 
 The 'ggcorset' package introduces a visualization technique coined the corset plot. It is used strictly to visualize repeat measures data at 2 time points (such as pre- and post- data). The distribution of measurements at each time point is visualized using a half violin, whilst the trajectories of individual change are visualized via spaghetti plots by connecting these two points linearly. These lines can be filled to visualize the magnitude of change or other user-defined observed value. This method of visualization is ideal for showing the true heterogeneity of data, including differences by sub-groups.
 
-The package relies on the '[ggplot2](https://github.com/tidyverse/ggplot2])' package to produce the visualizations. As such, the corset plot allows for easy integration with 'ggplot2', so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
+The package relies on the '[ggplot2](https://ggplot2.tidyverse.org)' package to produce the visualizations. As such, the corset plot allows for easy integration with 'ggplot2', so that users can customize their visualizations as required. This package is geared towards users with limited experience in R, creating corset plots using data in either wide or long format using the functions `gg_corset()` or `gg_corset_elongated()`, respectively.
 
 The 'ggcorset' package allows for easy customization by offering different descriptive features by group. Specifically, 'eyelets' can be used to show either standard error means (SEM) or the mean +/- 1 standard deviation by group, and 'faceted' corsets can be used highlight the distributions of each group.
 
@@ -18,13 +18,9 @@ The 'ggcorset' package allows for easy customization by offering different descr
 <img width="700" height="450" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
-## New GitHub-Exclusive Features v0.3.5
+## New Features for v0.4.0
 
-Different faceting styles to allow for more customization via the `facet_design` argument. The default is "original". The "line" option visualizes all individual trajectories in the background of each faceted corset using a soft grey (or other colour as specified by `line_fill`). More features to come in later releases.
-
-## New Features for v0.3.0
-
-Optional 'eyelets' (first added in version 0.2.0), now include different eyelet types in this new release. Specifically, the standard error mean (SEM) or 1 standard deviation above and below the mean can be visualized, by specifying either "SE" or "SD", respectively.
+Additional faceting options are available for more customization via the `facet_design` argument. The default is "original", which only facets the corset plot by 'c_var'. The second option is "line" which visualizes all individual trajectories in the background of each faceted corset using a soft grey (or other colour as specified by `line_fill`). The third option is "group" which adds a semi-opaque distribution of the `c_var` ontop of the overall distribution.
 
 ## Installation
 
@@ -42,11 +38,11 @@ devtools::install_github("kbelisar/ggcorset")
 
 ## Corset Plots in Action
 
-An example of corset plots in use, can be seen in the following publication: 
+Examples of corset plots in use, can be seen in the following publications: 
 
 > Minhas, M., Belisario, K., González-Roz, A., Halladay, J., Murphy, J.G. and MacKillop, J. (2021), COVID-19 impacts on drinking and mental health in emerging adults: Longitudinal changes and moderation by economic disruption and sex. Alcohol Clin Exp Res. https://doi.org/10.1111/acer.14624
 
-> More research to come!
+> González-Roz, A., Haik, A. K., Rahman, L., Todi, A. A., Kane, C., Walji, A., Dickerman S. R., Scarfe, M., Levitt E. E., Belisario, K., Kelly, J. F., & MacKillop, J. (2022) Impacts of the COVID-19 public health restrictions on substance use, mental health, and psychosocial functioning among individuals with alcohol use disorder, The American Journal of Drug and Alcohol Abuse, 48:6, 712-723, DOI: 10.1080/00952990.2022.2134021
 
 
 ## The ggcorset functions
@@ -71,7 +67,7 @@ This function is used to create a corset plot with data in the wide format. It t
 
 `faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var
 
-`facet_design` = defaults to "original" when `faceted` is set to TRUE. One of "original", or "line" which uses soft grey lines denoting entire sample trajectories in each facet
+`facet_design` = defaults to "original" when `faceted` is set to TRUE. One of "original", "line", or "group"
 
 `vio_fill` = optional argument to change the fill colour of the half violins (defaults to a soft black)
 
@@ -102,7 +98,7 @@ This function is used to create a corset plot with data in the long format. It t
 
 `faceted` = optional argument (defaults to FALSE) which facets corset plots by c_var with soft grey lines denoting entire sample trajectories
 
-`facet_design` = defaults to "original" when `faceted` is set to TRUE. One of "original", or "line" which uses soft grey lines denoting entire sample trajectories in each facet
+`facet_design` = defaults to "original" when `faceted` is set to TRUE. One of "original", "line", or "group"
 
 `vio_fill` = optional argument to change the fill colour of the half violins (defaults to a soft black)
 
@@ -134,7 +130,7 @@ By creating a corset plot as an R object, 'ggplot2' customizations can easily be
 
 `scale_colour_viridis()` - Custom colour-blind friendly colours for the c_var variable using the 'viridis' package
 
-`guides(colour = guide_legend(override.aes = list(size = 3)))` - Overrides thickness of legend so colours are more easily seen
+`guides(colour = guide_legend(override.aes = list(linewidth = 3)))` - Overrides thickness of legend so colours are more easily seen
 
 
 ## Full Example
@@ -174,7 +170,7 @@ plot +
   ylab("Number of Drinking Days per Week") +                            # Changes the y-axis title
   xlab("") +                                                            # Changes the x-axis title (removes in favour of the 2 time point labels below)
   scale_x_discrete(labels = c("Pre","Post")) +                          # Changes the labels of the 2 time points (on the x-axis)
-  guides(colour = guide_legend(override.aes = list(size = 3)))          # Makes the legend lines thicker
+  guides(colour = guide_legend(override.aes = list(linewidth = 3)))     # Makes the legend lines thicker
 
 ```
 **Example Corset Plot:**

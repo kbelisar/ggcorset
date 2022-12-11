@@ -11,7 +11,7 @@
 #' @param eyelets Optional (default is FALSE). If set to true, this will visualize one of two mean types by c_var, as defined by the 'e_type' argument.
 #' @param e_type Optional eyelet type if the eyelets parameter is set to TRUE. One of "SE" or "SD". The default is standard error ("SE") means. Alternatively, standard deviations ("SD") with means can be specified, which include horizontal lines to denote +1 and -1 standard deviation. Note that the visualization of standard deviations works best in tandem with the faceted option.
 #' @param faceted Optional (default is FALSE). If set to true, the c_var will be faceted.
-#' @param facet_design Optional facet type when the faceted parameter is set to TRUE. One of "original" or "line". The default is "original", which provides facets void of any special features. The "line" option includes all individual trajectories in the background of each facet using a soft grey (default) or custom colour as chosen by 'line_col' argument.
+#' @param facet_design Optional facet type when the faceted parameter is set to TRUE. One of "original","group", or "line". The default is "original", which provides facets void of any special features. The "group" option includes the overall distribution of the entire sample in the background of each facet (which defaults to the 'vio_fill' colour), alongside each distribution for each c_var group. The "line" option includes all individual trajectories in the background of each facet using a soft grey (default) or custom colour as chosen by 'line_col' argument.
 #' @param vio_fill Optional (defaults to a soft black). Use to change the fill colour of the half violins.
 #' @param line_size Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.
 #' @param line_col Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.
@@ -95,14 +95,14 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
       # calculating standard error of the mean
       data.summ <- data %>% group_by(c_var, x_var) %>%
         summarize(mean_y = mean(y_var, na.rm = TRUE),
-                  sd_se = sqrt(var(y_var, na.rm = TRUE)/length(y_var)))
+                  sd_se = sqrt(var(y_var[!is.na(y_var)])/length(y_var[!is.na(y_var)])))
     }
 
     if(e_type=="SD"){
       # calculating 1 standard deviation
       data.summ <- data %>% group_by(c_var, x_var) %>%
         summarize(mean_y = mean(y_var, na.rm = TRUE),
-                  sd_se = sqrt(var(y_var, na.rm = TRUE)))
+                  sd_se = sqrt(var(y_var[!is.na(y_var)])/length(y_var[!is.na(y_var)])))
     }
 
     # change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD
@@ -179,6 +179,56 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
   ## Faceted Corset Plot
   if(eyelets == F & faceted == T) {
 
+    if(facet_design == "original"){
+
+      corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
+
+        geom_line(mapping = aes(group = group, colour = c_var),
+                  position = ggstance::position_dodgev(height = 0.1),
+                  size = line_size, alpha = 1) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+
+        theme_classic() + facet_wrap(~c_var)
+
+    }
+
+    if(facet_design == "group"){
+
+      data2 <- dplyr::select(data, -c_var)
+
+      corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
+
+        geom_line(mapping = aes(group = group, colour = c_var),
+                  position = ggstance::position_dodgev(height = 0.1),
+                  size = line_size, alpha = 1) +
+
+        gghalves::geom_half_violin(
+          data = data2 %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data2 %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var, group = c_var, fill = c_var),
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 0.6, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var, group = c_var, fill = c_var),
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 0.6, show.legend = F) +
+
+        theme_classic() + facet_wrap(~c_var)
+
+    }
+
     if(facet_design == "line"){
 
     data2 <- dplyr::select(data, -c_var)
@@ -187,31 +237,23 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
 
       geom_line(data = data2, mapping = aes(group = group), colour = line_col,
                 position = ggstance::position_dodgev(height = 0.1),
-                size = line_size, alpha = 1)
+                size = line_size, alpha = 1) +
 
-    }
+      geom_line(mapping = aes(group = group, colour = c_var),
+                position = ggstance::position_dodgev(height = 0.1),
+                size = line_size, alpha = 1) +
 
-    if(facet_design == "original"){
-
-      corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var))
-
-    }
-
-      corset_plot <- corset_plot +
-
-        geom_line(mapping = aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1) +
-
-        gghalves::geom_half_violin(
+      gghalves::geom_half_violin(
         data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
         position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
 
-        gghalves::geom_half_violin(
+      gghalves::geom_half_violin(
         data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
         position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
 
-        theme_classic() + facet_wrap(~c_var)
+      theme_classic() + facet_wrap(~c_var)
+
+    }
 
   }
 
@@ -222,14 +264,14 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
       # calculating standard error of the mean
       data.summ <- data %>% group_by(c_var, x_var) %>%
         summarize(mean_y = mean(y_var, na.rm = TRUE),
-                  sd_se = sqrt(var(y_var, na.rm = TRUE)/length(y_var)))
+                  sd_se = sqrt(var(y_var[!is.na(y_var)])/length(y_var[!is.na(y_var)])))
     }
 
     if(e_type=="SD"){
       # calculating 1 standard deviation
       data.summ <- data %>% group_by(c_var, x_var) %>%
         summarize(mean_y = mean(y_var, na.rm = TRUE),
-                  sd_se = sqrt(var(y_var, na.rm = TRUE)))
+                  sd_se = sqrt(var(y_var[!is.na(y_var)])/length(y_var[!is.na(y_var)])))
     }
 
     # change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD
@@ -243,6 +285,56 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
     data.summ$sd_se_max <- ifelse((data.summ$mean_y+data.summ$sd_se)>max(data$y_var, na.rm = T),
                                   max(data$y_var, na.rm = T)-data.summ$mean_y,data.summ$sd_se)
 
+
+    if(facet_design == "original"){
+
+      corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+
+        geom_line(mapping = aes(group = group, colour = c_var),
+                  position = ggstance::position_dodgev(height = 0.1),
+                  size = line_size, alpha = 1) +
+
+        theme_classic() + facet_wrap(~c_var)
+
+    }
+
+    if(facet_design == "group"){
+
+      data2 <- dplyr::select(data, -c_var)
+
+      corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
+
+        gghalves::geom_half_violin(
+          data = data2 %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data2 %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var, group = c_var, fill = c_var),
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 0.6, show.legend = F) +
+
+        gghalves::geom_half_violin(
+          data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var, group = c_var, fill = c_var),
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 0.6, show.legend = F) +
+
+        geom_line(mapping = aes(group = group, colour = c_var),
+                  position = ggstance::position_dodgev(height = 0.1),
+                  size = line_size, alpha = 1) +
+
+        theme_classic() + facet_wrap(~c_var)
+
+    }
 
     if(facet_design == "line"){
 
@@ -260,31 +352,15 @@ gg_corset_elongated <- function(data, x_var, x_vals, y_var, group, c_var, eyelet
 
         geom_line(data = data2, mapping = aes(group = group), colour = line_col,
                   position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)
-
-    }
-
-    if(facet_design == "original"){
-
-      corset_plot <- ggplot(data = data, aes(x = x_var, y = y_var)) +
-
-        gghalves::geom_half_violin(
-          data = data %>% filter(x_var == x_vals[1]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
-
-        gghalves::geom_half_violin(
-          data = data %>% filter(x_var == x_vals[2]), mapping = aes(x = x_var, y = y_var), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F)
-
-    }
-
-      corset_plot <- corset_plot +
+                  size = line_size, alpha = 1) +
 
         geom_line(mapping = aes(group = group, colour = c_var),
-                position = ggstance::position_dodgev(height = 0.1),
-                size = line_size, alpha = 1) +
+                  position = ggstance::position_dodgev(height = 0.1),
+                  size = line_size, alpha = 1) +
 
         theme_classic() + facet_wrap(~c_var)
+
+    }
 
     if(e_type=="SE"){
 
