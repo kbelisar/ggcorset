@@ -18,9 +18,11 @@ The 'ggcorset' package allows for easy customization by offering different descr
 <img width="700" height="450" src="https://github.com/kbelisar/ggcorset/blob/main/visualizations/example_corset_plot_github_faceted.png">
 </p>
 
-## New Features for v0.4.0 (Now Available on CRAN!)
+## New Features for v0.4.5 (Now Available on CRAN!)
 
 Additional faceting options are available for more customization via the `facet_design` argument. The default is "original", which only facets the corset plot by 'c_var'. The second option is "line" which visualizes all individual trajectories in the background of each faceted corset using a soft grey (or other colour as specified by `line_fill`). The third option is "group" which adds a semi-opaque distribution of the `c_var` ontop of the overall distribution.
+
+The standard error (SE) calculation was updated to accommodate missing data, and the standard deviation (SD) calculation was fixed (as version 0.4.0 inadvertently calculated SE rather than SD).
 
 ## Installation
 
