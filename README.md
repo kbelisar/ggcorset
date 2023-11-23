@@ -42,9 +42,11 @@ devtools::install_github("kbelisar/ggcorset")
 
 Examples of corset plots in use, can be seen in the following publications: 
 
-> Minhas, M., Belisario, K., González-Roz, A., Halladay, J., Murphy, J.G. and MacKillop, J. (2021), COVID-19 impacts on drinking and mental health in emerging adults: Longitudinal changes and moderation by economic disruption and sex. Alcohol Clin Exp Res. https://doi.org/10.1111/acer.14624
+> Minhas, M., Belisario, K., González-Roz, A., Halladay, J., Murphy, J.G. and MacKillop, J. (2021), COVID-19 impacts on drinking and mental health in emerging adults: Longitudinal changes and moderation by economic disruption and sex. Alcohol Clin Exp Res, https://doi.org/10.1111/acer.14624
 
 > González-Roz, A., Haik, A. K., Rahman, L., Todi, A. A., Kane, C., Walji, A., Dickerman S. R., Scarfe, M., Levitt E. E., Belisario, K., Kelly, J. F., & MacKillop, J. (2022) Impacts of the COVID-19 public health restrictions on substance use, mental health, and psychosocial functioning among individuals with alcohol use disorder, The American Journal of Drug and Alcohol Abuse, 48:6, 712-723, https://doi.org/10.1080/00952990.2022.2134021
+
+> You, Y., Liu, J., Yao, Z., Zhang, S., Chen, K., & Ma, X. (2023). Neural mechanisms of long-term exercise intervention on cognitive performance among short-sleep young adults: a hemodynamic study. Sleep Medicine, 110, 7-16, https://doi.org/10.1016/j.sleep.2023.07.020
 
 
 ## The ggcorset functions
