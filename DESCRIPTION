@@ -24,3 +24,5 @@ Suggests:
     viridis,
     MetBrewer
 VignetteBuilder: knitr
+URL: https://github.com/kbelisar/ggcorset
+BugReports: https://github.com/kbelisar/ggcorset/issues
