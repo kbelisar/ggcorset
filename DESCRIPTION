@@ -13,6 +13,8 @@ Description: Corset plots are a visualization technique used strictly to visuali
   integration so that users can customize their visualizations as required. Users can create corset 
   plots using data in either wide or long format using the functions gg_corset() or gg_corset_elongated(), respectively.
 License: MIT + file LICENSE
+URL: https://cran.r-project.org/web/packages/ggcorset/index.html, https://github.com/kbelisar/ggcorset
+BugReports: https://github.com/kbelisar/ggcorset/issues
 Depends: R (>= 3.5.0)
 Imports: ggplot2, dplyr, gghalves, ggstance
 Encoding: UTF-8
