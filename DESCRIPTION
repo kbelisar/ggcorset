@@ -1,7 +1,7 @@
 Package: ggcorset
 Type: Package
 Title: The Corset Plot
-Version: 0.4.5
+Version: 0.5.0
 Author: Kyla Belisario
 Maintainer: Kyla Belisario <kyla_belisario@protonmail.com>
 Description: Corset plots are a visualization technique used strictly to visualize repeat measures 
@@ -16,10 +16,10 @@ License: MIT + file LICENSE
 URL: https://cran.r-project.org/web/packages/ggcorset/index.html, https://github.com/kbelisar/ggcorset
 BugReports: https://github.com/kbelisar/ggcorset/issues
 Depends: R (>= 3.5.0)
-Imports: ggplot2, dplyr, gghalves, ggstance
+Imports: ggplot2, gghalves
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 Suggests: 
     rmarkdown,
     knitr,

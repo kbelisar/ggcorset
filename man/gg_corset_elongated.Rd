@@ -29,6 +29,8 @@
 \item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.}
 
 \item{line_col}{Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.}
+
+\item{line_dodge}{Use to change the amount of vertical dodge of the lines which visualize the c_var. The default is 0.1.}
 }
 \value{
 ggplot2 graphical object
@@ -38,11 +40,15 @@ This function visualizes a corset plot in long format.
 }
 \examples{
 
-long.df <- data.frame(id = c(1,1,2,2,3,3),
-             time = c("pre","post","pre","post","pre","post"),
-             days  = c(3,5,4,0,7,7),
-             change = c(28.57,28.57,-57.14,-57.14,0,0),
-             direction = c("increase","increase","decrease","decrease","no change","no change"))
+long.df <- data.frame(id = c(rep(1:20,2)),
+             time = c(rep(c("pre","post"),each = 20)),
+             days  = c(3,4,7,5,6,3,4,1,7,0,5,2,0,1,6,2,1,7,4,6,
+                       5,5,7,3,0,3,3,2,7,0,3,4,3,3,7,0,0,6,5,6),
+             change = c(2,1,0,-2,-6,0,-1,1,0,0,-2,2,3,2,1,-2,-1,-1,1,0,
+                        2,1,0,-2,-6,0,-1,1,0,0,-2,2,3,2,1,-2,-1,-1,1,0))
+
+long.df$direction <- ifelse(long.df$change==0,"No Change",
+                           ifelse(long.df$change>0,"Increase","Decrease"))
 
 gg_corset_elongated(data = long.df, x_var = "time",
                    x_vals = c("pre","post"), y_var = "days",

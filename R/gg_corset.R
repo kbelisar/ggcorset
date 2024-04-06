@@ -14,14 +14,17 @@
 #' @param vio_fill Optional (defaults to a soft black). Use to change the fill colour of the half violins.
 #' @param line_size Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.
 #' @param line_col Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.
+#' @param line_dodge Use to change the amount of vertical dodge of the lines which visualize the c_var. The default is 0.1.
 #' @return ggplot2 graphical object
 #' @examples
 #'
-#' wide.df <- data.frame(id = c(1,2,3,4,5),
-#'              time1 = c(3,4,7,5,6),
-#'              time2  = c(5,5,7,3,0),
-#'              change = c(28.57,14.29,0,-28.57,-85.71),
-#'              direction = c("increase","increase","no change","decrease","decrease"))
+#' wide.df <- data.frame(id = c(1:20),
+#'              time1 = c(3,4,7,5,6,3,4,1,7,0,5,2,0,1,6,2,1,7,4,6),
+#'              time2  = c(5,5,7,3,0,3,3,2,7,0,3,4,3,3,7,0,0,6,5,6))
+#'
+#' wide.df$change <- wide.df$time2-wide.df$time1
+#' wide.df$direction <- ifelse(wide.df$change==0,"No Change",
+#'                            ifelse(wide.df$change>0,"Increase","Decrease"))
 #'
 #' gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
 #'           group = "id", c_var = "change")
@@ -41,17 +44,15 @@
 #' gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2", group = "id",
 #'           c_var = "direction", e_type = "SD", faceted = TRUE)
 #'
-#' @importFrom dplyr %>% filter summarize group_by select
 #' @importFrom ggplot2 ggplot geom_point geom_pointrange geom_errorbar geom_line aes position_dodge position_nudge theme_classic facet_wrap
 #' @importFrom gghalves geom_half_violin
-#' @importFrom ggstance position_dodgev
-#' @importFrom stats reshape var
+#' @importFrom stats reshape var sd
 #' @export
 
 globalVariables(c("x_axis", "y","mean_y","sd_se","sd_se_min","sd_se_max"))
 
-## FOR WIDE-FORM DATA
-gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_type = "SE", faceted = FALSE, facet_design = "original", vio_fill = NA, line_size = NA, line_col = NA) {
+### FOR WIDE-FORM DATA
+gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_type = "SE", faceted = FALSE, facet_design = "original", vio_fill = NA, line_size = NA, line_col = NA, line_dodge = 0.1) {
 
   data <- as.data.frame(data)
   data$y_var1 <- data[,y_var1]
@@ -70,67 +71,71 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
   line_size <- ifelse(is.na(line_size),0.25,line_size)
   line_col <- ifelse(is.na(line_col),"#B3B3B3",line_col)
 
-  ## Basic Corset Plot
-  if(eyelets == F & faceted == F) {
+  ### Basic Corset Plot
+  if(eyelets == FALSE & faceted == FALSE) {
     corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
       geom_line(mapping = aes(group = group, colour = c_var),
-                position = ggstance::position_dodgev(height = 0.1),
-                size = line_size, alpha = 1) +
+                position = position_dodgev(height = 0.1),
+                linewidth = line_size, alpha = 1) +
 
       gghalves::geom_half_violin(
-        data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+        data = data.long[(data.long$x_axis == "var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
       gghalves::geom_half_violin(
-        data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+        data = data.long[(data.long$x_axis == "var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
       theme_classic()
 
   }
-  ## Corset Plot with Eyelets
-  if(eyelets == T & faceted == F) {
+  ### Corset Plot with Eyelets
+  if(eyelets == TRUE & faceted == FALSE) {
 
     if(e_type=="SE") {
-      # calculating standard error of the mean
-      data.summ <- data.long %>% group_by(c_var, x_axis) %>%
-        summarize(mean_y = mean(y, na.rm = TRUE),
-                  sd_se = sqrt(var(y[!is.na(y)])/length(y[!is.na(y)])))
+      ## calculating standard error of the mean
+      dat_mean <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) mean(x, na.rm = TRUE))
+      dat_se <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) se(x))
 
+      data.summ <- merge(dat_mean,dat_se, by = c("c_var","x_axis"), all = TRUE)
+      names(data.summ) <- c("c_var","x_axis","mean_y","sd_se")
     }
 
     if(e_type=="SD"){
-      # calculating 1 standard deviation
-      data.summ <- data.long %>% group_by(c_var, x_axis) %>%
-        summarize(mean_y = mean(y, na.rm = TRUE),
-                  sd_se = sqrt(var(y,na.rm = T)))
+      ## calculating 1 standard deviation
+      dat_mean <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) mean(x, na.rm = TRUE))
+      dat_sd <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) stats::sd(x, na.rm = TRUE))
+
+      data.summ <- merge(dat_mean,dat_sd, by = c("c_var","x_axis"), all = TRUE)
+      names(data.summ) <- c("c_var","x_axis","mean_y","sd_se")
+
     }
 
-    # change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD
+    ## change to 0 if only 1 observation is present, as NAs will be produced for SE/ SD
     data.summ$sd_se <- ifelse(is.na(data.summ$sd_se),0, data.summ$sd_se)
 
-    # change SD/SE to not go beyond data limits (min or max values) as this is not informative
-    # if mean - sd/se < min, sd/se == mean - min; if mean + sd/se > max, sd/se == max - mean
-    data.summ$sd_se_min <- ifelse((data.summ$mean_y-data.summ$sd_se)<min(data.long$y, na.rm = T),
-                                  data.summ$mean_y-min(data.long$y, na.rm = T), data.summ$sd_se)
+    ## change SD/SE to not go beyond data limits (min or max values) as this is not informative
+    ## if mean - sd/se < min, sd/se == mean - min; if mean + sd/se > max, sd/se == max - mean
+    data.summ$sd_se_min <- ifelse((data.summ$mean_y-data.summ$sd_se)<min(data.long$y, na.rm = TRUE),
+                                  data.summ$mean_y-min(data.long$y, na.rm = TRUE), data.summ$sd_se)
 
-    data.summ$sd_se_max <- ifelse((data.summ$mean_y+data.summ$sd_se)>max(data.long$y, na.rm = T),
-                                  max(data.long$y, na.rm = T)-data.summ$mean_y,data.summ$sd_se)
+    data.summ$sd_se_max <- ifelse((data.summ$mean_y+data.summ$sd_se)>max(data.long$y, na.rm = TRUE),
+                                  max(data.long$y, na.rm = TRUE)-data.summ$mean_y,data.summ$sd_se)
 
     corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
       geom_line(mapping = aes(group = group, colour = c_var),
-                position = ggstance::position_dodgev(height = 0.1),
-                size = line_size, alpha = 1) +
+                position = position_dodgev(height = 0.1),
+                linewidth = line_size, alpha = 1) +
 
       gghalves::geom_half_violin(
-        data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+        data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
       gghalves::geom_half_violin(
-        data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+        data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
       theme_classic()
 
@@ -139,12 +144,12 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- corset_plot +
 
         geom_pointrange(
-          data = data.summ %>% filter(x_axis == "var1"),
+          data = data.summ[(data.summ$x_axis=="var1"),],
           aes(y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
           position = position_nudge(x = -0.05, y = 0), size = 1, show.legend = F) +
 
         geom_pointrange(
-          data = data.summ %>% filter(x_axis == "var2"),
+          data = data.summ[(data.summ$x_axis=="var2"),],
           aes(y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
           position = position_nudge(x = 0.05, y = 0), size = 1, show.legend = F)
 
@@ -155,43 +160,43 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- corset_plot +
 
         geom_errorbar(
-          data = data.summ %>% filter(x_axis == "var1"),
+          data = data.summ[(data.summ$x_axis=="var1"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = -0.04, y = 0), width = 0.025, size = 1, show.legend = F) +
+          position = position_nudge(x = -0.04, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
 
         geom_errorbar(
-          data = data.summ %>% filter(x_axis == "var2"),
+          data = data.summ[(data.summ$x_axis=="var2"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = 0.04, y = 0), width = 0.025, size = 1, show.legend = F) +
+          position = position_nudge(x = 0.04, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
 
-        geom_point(data = data.summ %>% filter(x_axis == "var1"),
+        geom_point(data = data.summ[(data.summ$x_axis=="var1"),],
                    aes(x = x_axis, y = mean_y, colour = c_var),
-                   position = position_nudge(x = -0.04, y = 0), size = 2.5, show.legend = F) +
+                   position = position_nudge(x = -0.04, y = 0), size = 2.5, show.legend = FALSE) +
 
-        geom_point(data = data.summ %>% filter(x_axis == "var2"),
+        geom_point(data = data.summ[(data.summ$x_axis=="var2"),],
                    aes(x = x_axis, y = mean_y, colour = c_var),
-                   position = position_nudge(x = 0.04, y = 0), size = 2.5, show.legend = F)
+                   position = position_nudge(x = 0.04, y = 0), size = 2.5, show.legend = FALSE)
 
     }
   }
   ## Faceted Corset Plot
-  if(eyelets == F & faceted == T) {
+  if(eyelets == FALSE & faceted == TRUE) {
 
     if(facet_design == "original"){
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)  +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -199,29 +204,29 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
 
     if(facet_design == "group"){
 
-      data.long2 <- dplyr::select(data.long, -c_var)
+      data.long2 <- data.long[, -which(names(data.long) %in% c("c_var"))]
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)  +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
-          data = data.long2 %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+          data = data.long2[(data.long2$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long2 %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+          data = data.long2[(data.long2$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = -0.01,y = 0), scale = "count", size = 0, side = "l", alpha = 0.6, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
+          position = position_nudge(x = -0.01,y = 0), scale = "count", size = 0, side = "l", alpha = 0.6, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = 0.01,y = 0),  scale = "count", size = 0, side = "r", alpha = 0.6, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
+          position = position_nudge(x = 0.01,y = 0),  scale = "count", size = 0, side = "r", alpha = 0.6, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -229,57 +234,61 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
 
     if(facet_design == "line"){
 
-      data.long2 <- dplyr::select(data.long, -c_var)
+      data.long2 <- data.long[, -which(names(data.long) %in% c("c_var"))]
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(data = data.long2, mapping = aes(group = group), colour = line_col,
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1) +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)  +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
     }
 
   }
-  ## Faceted Corset Plot with Eyelets
-  if(eyelets == T & faceted == T) {
+  ### Faceted Corset Plot with Eyelets
+  if(eyelets == TRUE & faceted == TRUE) {
 
     if(e_type=="SE") {
-      # calculating standard error means (SEM)
-      data.summ <- data.long %>% group_by(c_var, x_axis) %>%
-        summarize(mean_y = mean(y, na.rm = TRUE),
-                  sd_se = sqrt(var(y[!is.na(y)])/length(y[!is.na(y)])))
+      ## calculating standard error means (SEM)
+      dat_mean <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) mean(x, na.rm = TRUE))
+      dat_se <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) se(x))
+
+      data.summ <- merge(dat_mean,dat_se, by = c("c_var","x_axis"), all = TRUE)
+      names(data.summ) <- c("c_var","x_axis","mean_y","sd_se")
     }
 
     if(e_type=="SD"){
-      data.summ <- data.long %>% group_by(c_var, x_axis) %>%
-        summarize(mean_y = mean(y, na.rm = TRUE),
-                  sd_se = sqrt(var(y,na.rm = T)))
+      dat_mean <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) mean(x, na.rm = TRUE))
+      dat_sd <- stats::aggregate(data.long[c("y")], by = list(c_var = data.long[,"c_var"], x_axis = data.long[,"x_axis"]), function(x) stats::sd(x, na.rm = TRUE))
+
+      data.summ <- merge(dat_mean,dat_sd, by = c("c_var","x_axis"), all = TRUE)
+      names(data.summ) <- c("c_var","x_axis","mean_y","sd_se")
     }
 
-    # change to 0 if only 1 observation is present, as NAs will be produced for SEM/ SD
+    ## change to 0 if only 1 observation is present, as NAs will be produced for SEM/ SD
     data.summ$sd_se <- ifelse(is.na(data.summ$sd_se),0, data.summ$sd_se)
 
-    # change SD/SE to not go beyond data limits (min or max values) as this is not informative
-    # if mean - sd/se < min, sd/se == mean - min; if mean + sd/se > max, sd/se == max - mean
-    data.summ$sd_se_min <- ifelse((data.summ$mean_y-data.summ$sd_se)<min(data.long$y, na.rm = T),
-                                  data.summ$mean_y-min(data.long$y, na.rm = T), data.summ$sd_se)
+    ## change SD/SE to not go beyond data limits (min or max values) as this is not informative
+    ## if mean - sd/se < min, sd/se == mean - min; if mean + sd/se > max, sd/se == max - mean
+    data.summ$sd_se_min <- ifelse((data.summ$mean_y-data.summ$sd_se)<min(data.long$y, na.rm = TRUE),
+                                  data.summ$mean_y-min(data.long$y, na.rm = TRUE), data.summ$sd_se)
 
-    data.summ$sd_se_max <- ifelse((data.summ$mean_y+data.summ$sd_se)>max(data.long$y, na.rm = T),
-                                  max(data.long$y, na.rm = T)-data.summ$mean_y,data.summ$sd_se)
+    data.summ$sd_se_max <- ifelse((data.summ$mean_y+data.summ$sd_se)>max(data.long$y, na.rm = TRUE),
+                                  max(data.long$y, na.rm = TRUE)-data.summ$mean_y,data.summ$sd_se)
 
 
     if(facet_design == "original"){
@@ -287,16 +296,16 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)  +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1)  +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -304,29 +313,29 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
 
     if(facet_design == "group"){
 
-      data.long2 <- dplyr::select(data.long, -c_var)
+      data.long2 <- data.long[, -which(names(data.long) %in% c("c_var"))]
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)  +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
-          data = data.long2 %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+          data = data.long2[(data.long2$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long2 %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+          data = data.long2[(data.long2$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = -0.01,y = 0), scale = "count", size = 0, side = "l", alpha = 0.6, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
+          position = position_nudge(x = -0.01,y = 0), scale = "count", size = 0, side = "l", alpha = 0.6, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = 0.01,y = 0),  scale = "count", size = 0, side = "r", alpha = 0.6, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
+          position = position_nudge(x = 0.01,y = 0),  scale = "count", size = 0, side = "r", alpha = 0.6, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -334,25 +343,25 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
 
     if(facet_design == "line"){
 
-      data.long2 <- dplyr::select(data.long, -c_var)
+      data.long2 <- data.long[, -which(names(data.long) %in% c("c_var"))]
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var1"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
 
         gghalves::geom_half_violin(
-          data = data.long %>% filter(x_axis == "var2"), mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = F) +
+          data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
+          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         geom_line(data = data.long2, mapping = aes(group = group), colour = line_col,
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1) +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = ggstance::position_dodgev(height = 0.1),
-                  size = line_size, alpha = 1)  +
+                  position = position_dodgev(height = 0.1),
+                  linewidth = line_size, alpha = 1)  +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -364,14 +373,14 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- corset_plot +
 
         geom_pointrange(
-          data = data.summ %>% filter(x_axis == "var1"),
+          data = data.summ[(data.summ$x_axis=="var1"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = -0.075, y = 0), size = 1, show.legend = F) +
+          position = position_nudge(x = -0.075, y = 0), size = 1, show.legend = FALSE) +
 
         geom_pointrange(
-          data = data.summ %>% filter(x_axis == "var2"),
+          data = data.summ[(data.summ$x_axis=="var2"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = 0.075, y = 0), size = 1, show.legend = F)
+          position = position_nudge(x = 0.075, y = 0), size = 1, show.legend = FALSE)
 
     }
 
@@ -380,22 +389,22 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- corset_plot +
 
         geom_errorbar(
-          data = data.summ %>% filter(x_axis == "var1"),
+          data = data.summ[(data.summ$x_axis=="var1"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = -0.06, y = 0), width = 0.025, size = 1, show.legend = F) +
+          position = position_nudge(x = -0.06, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
 
         geom_errorbar(
-          data = data.summ %>% filter(x_axis == "var2"),
+          data = data.summ[(data.summ$x_axis=="var2"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = 0.06, y = 0), width = 0.025, size = 1, show.legend = F) +
+          position = position_nudge(x = 0.06, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
 
-        geom_point(data = data.summ %>% filter(x_axis == "var1"),
+        geom_point(data = data.summ[(data.summ$x_axis=="var1"),],
                    aes(x = x_axis, y = mean_y, colour = c_var),
-                   position = position_nudge(x = -0.06, y = 0), size = 2.5, show.legend = F) +
+                   position = position_nudge(x = -0.06, y = 0), size = 2.5, show.legend = FALSE) +
 
-        geom_point(data = data.summ %>% filter(x_axis == "var2"),
+        geom_point(data = data.summ[(data.summ$x_axis=="var2"),],
                    aes(x = x_axis, y = mean_y, colour = c_var),
-                   position = position_nudge(x = 0.06, y = 0), size = 2.5, show.legend = F)
+                   position = position_nudge(x = 0.06, y = 0), size = 2.5, show.legend = FALSE)
 
     }
 

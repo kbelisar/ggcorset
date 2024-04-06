@@ -27,6 +27,8 @@
 \item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.}
 
 \item{line_col}{Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.}
+
+\item{line_dodge}{Use to change the amount of vertical dodge of the lines which visualize the c_var. The default is 0.1.}
 }
 \value{
 ggplot2 graphical object
@@ -36,11 +38,13 @@ This function visualizes a corset plot in wide format.
 }
 \examples{
 
-wide.df <- data.frame(id = c(1,2,3,4,5),
-             time1 = c(3,4,7,5,6),
-             time2  = c(5,5,7,3,0),
-             change = c(28.57,14.29,0,-28.57,-85.71),
-             direction = c("increase","increase","no change","decrease","decrease"))
+wide.df <- data.frame(id = c(1:20),
+             time1 = c(3,4,7,5,6,3,4,1,7,0,5,2,0,1,6,2,1,7,4,6),
+             time2  = c(5,5,7,3,0,3,3,2,7,0,3,4,3,3,7,0,0,6,5,6))
+
+wide.df$change <- wide.df$time2-wide.df$time1
+wide.df$direction <- ifelse(wide.df$change==0,"No Change",
+                           ifelse(wide.df$change>0,"Increase","Decrease"))
 
 gg_corset(data = wide.df, y_var1 = "time1", y_var2 = "time2",
           group = "id", c_var = "change")

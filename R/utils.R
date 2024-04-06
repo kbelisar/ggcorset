@@ -38,3 +38,12 @@ theme_ggcorset <- function() {
           axis.ticks = element_line(size = 0.75),
           strip.text = element_text(size = 13, face = "bold", vjust = 0.5, margin = margin(t = 5, b = 5)))
 }
+
+#' `se()`
+#' This function calculates standard error.
+#' @name se
+#' @param x An R object.
+#' @noRd
+
+se <- function(x){sqrt(var(x[!is.na(x)])/length(x[!is.na(x)]))}
+
