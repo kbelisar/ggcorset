@@ -12,9 +12,9 @@
 #' @param faceted Optional (default is FALSE). If set to true, the c_var will be faceted.
 #' @param facet_design Optional facet type when the faceted parameter is set to TRUE. One of "original","group", or "line". The default is "original", which provides facets void of any special features. The "group" option includes the overall distribution of the entire sample in the background of each facet (which defaults to the 'vio_fill' colour), alongside each distribution for each c_var group. The "line" option includes all individual trajectories in the background of each facet using a soft grey (default) or custom colour as chosen by 'line_col' argument.
 #' @param vio_fill Optional (defaults to a soft black). Use to change the fill colour of the half violins.
-#' @param line_size Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.
+#' @param line_size Optional. Use to change the size (thickness) of the lines which visualize change for each unit identified by the group variable. Default is 0.25.
 #' @param line_col Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.
-#' @param line_dodge Use to change the amount of vertical dodge of the lines which visualize the c_var. The default is 0.1.
+#' @param line_dodge Optional. Use to change the amount of vertical dodge of the lines which visualize each unit of the group variable. Default is 0.1.
 #' @return ggplot2 graphical object
 #' @examples
 #'
@@ -76,7 +76,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
     corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
       geom_line(mapping = aes(group = group, colour = c_var),
-                position = position_dodgev(height = 0.1),
+                position = position_dodgev(height = line_dodge),
                 linewidth = line_size, alpha = 1) +
 
       gghalves::geom_half_violin(
@@ -126,7 +126,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
     corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
       geom_line(mapping = aes(group = group, colour = c_var),
-                position = position_dodgev(height = 0.1),
+                position = position_dodgev(height = line_dodge),
                 linewidth = line_size, alpha = 1) +
 
       gghalves::geom_half_violin(
@@ -187,7 +187,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
@@ -209,7 +209,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
@@ -239,11 +239,11 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(data = data.long2, mapping = aes(group = group), colour = line_col,
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
@@ -304,7 +304,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
           position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
         theme_classic() + facet_wrap(~c_var)
@@ -318,7 +318,7 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
         gghalves::geom_half_violin(
@@ -356,11 +356,11 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
           position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
 
         geom_line(data = data.long2, mapping = aes(group = group), colour = line_col,
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1) +
 
         geom_line(aes(group = group, colour = c_var),
-                  position = position_dodgev(height = 0.1),
+                  position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
         theme_classic() + facet_wrap(~c_var)

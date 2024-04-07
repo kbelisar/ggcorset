@@ -26,11 +26,11 @@
 
 \item{vio_fill}{Optional (defaults to a soft black). Use to change the fill colour of the half violins.}
 
-\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize the c_var. Default is 0.25.}
+\item{line_size}{Optional. Use to change the size (thickness) of the lines which visualize change for each unit identified by the group variable. Default is 0.25.}
 
 \item{line_col}{Optional custom colour of the background individual lines when the facet_design is set to "line". Defaults to a soft grey.}
 
-\item{line_dodge}{Use to change the amount of vertical dodge of the lines which visualize the c_var. The default is 0.1.}
+\item{line_dodge}{Optional. Use to change the amount of vertical dodge of the lines which visualize each unit of the group variable. Default is 0.1.}
 }
 \value{
 ggplot2 graphical object

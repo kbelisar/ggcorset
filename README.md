@@ -74,6 +74,7 @@ This function is used to create a corset plot with data in the wide format. It t
 
 `line_col` = optional argument when `facet_design` is set to "line" to change the colour of the background group lines
 
+`line_dodge` = optional argument to change the amount of vertical dodge of the lines (default is 0.1)
 
 ### gg_corset_elongated()
 
@@ -105,6 +106,7 @@ This function is used to create a corset plot with data in the long format. It t
 
 `line_col` = optional argument when `facet_design` is set to "line" to change the colour of the background group lines
 
+`line_dodge` = optional argument to change the amount of vertical dodge of the lines (default is 0.1)
 
 ### theme_ggcorset()
 
