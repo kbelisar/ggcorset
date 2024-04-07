@@ -4,6 +4,6 @@ bibentry(
   author = "Kyla Belisario",
   title = "Corset Plots: Visualizing Heterogeneity in Change Outcomes Across Two Timepoints",
   year = "2021",
-  doi = "doi/10.5281/zenodo.4905031",
+  doi = "10.5281/zenodo.4905031",
   url = "https://cran.r-project.org/package=ggcorset"
 )
