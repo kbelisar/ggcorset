@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "To cite ggcorset in publications, please use the following:"
+message: "If you use this software, please cite it as below."
 authors:
 - family-names: "Belisario"
   given-names: "Kyla"
