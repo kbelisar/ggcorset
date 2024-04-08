@@ -1,11 +1,11 @@
 cff-version: 1.2.0
- message: "To cite ggcorset in publications, please use the following:"
- authors:
- - family-names: "Belisario"
-   given-names: "Kyla"
-   orcid: "https://orcid.org/0000-0001-5403-9531"
- title: "Corset Plots - Visualizing Heterogeneity in Change Outcomes Across Two Timepoints"
- version: 5.0.0
- doi: 10.5281/zenodo.4905031
- date-released: 2021-06-06
- url: "https://github.com/kbelisar/ggcorset"
+message: "To cite ggcorset in publications, please use the following:"
+authors:
+- family-names: "Belisario"
+  given-names: "Kyla"
+  orcid: "https://orcid.org/0000-0001-5403-9531"
+title: "Corset Plots - Visualizing Heterogeneity in Change Outcomes Across Two Timepoints"
+version: 5.0.0
+doi: 10.5281/zenodo.4905031
+date-released: 2021-06-06
+url: "https://github.com/kbelisar/ggcorset"
