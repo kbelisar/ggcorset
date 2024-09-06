@@ -43,6 +43,8 @@ Examples of corset plots in use, can be seen in the following publications:
 
 > You, Y., Liu, J., Yao, Z., Zhang, S., Chen, K., & Ma, X. (2023). Neural mechanisms of long-term exercise intervention on cognitive performance among short-sleep young adults: a hemodynamic study. Sleep Medicine, 110, 7-16, https://doi.org/10.1016/j.sleep.2023.07.020
 
+> Griffiths, K.R., Boulet, S., Barakat, S. et al. Exploring bi-directional impacts of Lisdexamfetamine dimesylate on psychological comorbidities and quality of life in people with Binge Eating Disorder. J Eat Disord 12, 80 (2024). https://doi.org/10.1186/s40337-024-01041-9
+
 
 ## The ggcorset functions
 
