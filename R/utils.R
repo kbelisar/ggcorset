@@ -23,7 +23,7 @@ theme_ggcorset <- function() {
   theme_classic() %+replace%
     theme(plot.title = element_text(size = 20,face = "bold", hjust = 0.5, vjust = 1, margin = margin(b = 3)),
           plot.subtitle = element_text(size = 13, hjust = 0.5, vjust = 0),
-          panel.border = element_rect(size = 1, fill = NA),
+          panel.border = element_rect(linewidth = 1, fill = NA),
           legend.direction = "horizontal",
           legend.position = "top",
           legend.key.width = unit(15, "mm"),
@@ -35,7 +35,7 @@ theme_ggcorset <- function() {
           axis.title.x = element_text(size = 18, face = "bold", hjust = 0.5, vjust = 0, margin = margin(t = 3)),
           axis.title.y = element_text(size = 18, face = "bold", hjust = 0.5, angle = 90, margin = margin(r = 10)),
           axis.ticks.length = unit(2, "mm"),
-          axis.ticks = element_line(size = 0.75),
+          axis.ticks = element_line(linewidth = 0.75),
           strip.text = element_text(size = 13, face = "bold", vjust = 0.5, margin = margin(t = 5, b = 5)))
 }
 

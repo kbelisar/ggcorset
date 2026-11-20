@@ -45,7 +45,7 @@
 #'           c_var = "direction", e_type = "SD", faceted = TRUE)
 #'
 #' @importFrom ggplot2 ggplot geom_point geom_pointrange geom_errorbar geom_line aes position_dodge position_nudge theme_classic facet_wrap
-#' @importFrom gghalves geom_half_violin
+#' @importFrom see geom_violinhalf
 #' @importFrom stats reshape var sd
 #' @export
 
@@ -79,13 +79,13 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
                 position = position_dodgev(height = line_dodge),
                 linewidth = line_size, alpha = 1) +
 
-      gghalves::geom_half_violin(
+      see::geom_violinhalf(
         data = data.long[(data.long$x_axis == "var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+        position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-      gghalves::geom_half_violin(
+      see::geom_violinhalf(
         data = data.long[(data.long$x_axis == "var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+        position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
       theme_classic()
 
@@ -129,13 +129,13 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
                 position = position_dodgev(height = line_dodge),
                 linewidth = line_size, alpha = 1) +
 
-      gghalves::geom_half_violin(
+      see::geom_violinhalf(
         data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+        position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-      gghalves::geom_half_violin(
+      see::geom_violinhalf(
         data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-        position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+        position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
       theme_classic()
 
@@ -162,12 +162,12 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
         geom_errorbar(
           data = data.summ[(data.summ$x_axis=="var1"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = -0.04, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.04, y = 0), width = 0.025, linewidth = 1, show.legend = FALSE) +
 
         geom_errorbar(
           data = data.summ[(data.summ$x_axis=="var2"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = 0.04, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.04, y = 0), width = 0.025, linewidth = 1, show.legend = FALSE) +
 
         geom_point(data = data.summ[(data.summ$x_axis=="var1"),],
                    aes(x = x_axis, y = mean_y, colour = c_var),
@@ -190,13 +190,13 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
                   position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -212,21 +212,21 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
                   position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long2[(data.long2$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long2[(data.long2$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = -0.01,y = 0), scale = "count", size = 0, side = "l", alpha = 0.6, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), scale = "count", linewidth = 0, flip = TRUE, alpha = 0.6, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = 0.01,y = 0),  scale = "count", size = 0, side = "r", alpha = 0.6, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0),  scale = "count", linewidth = 0, flip = FALSE, alpha = 0.6, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -246,13 +246,13 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
                   position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -295,13 +295,13 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
         geom_line(aes(group = group, colour = c_var),
                   position = position_dodgev(height = line_dodge),
@@ -321,21 +321,21 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
                   position = position_dodgev(height = line_dodge),
                   linewidth = line_size, alpha = 1)  +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long2[(data.long2$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long2[(data.long2$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = -0.01,y = 0), scale = "count", size = 0, side = "l", alpha = 0.6, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), scale = "count", linewidth = 0, flip = TRUE, alpha = 0.6, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y, group = c_var, fill = c_var),
-          position = position_nudge(x = 0.01,y = 0),  scale = "count", size = 0, side = "r", alpha = 0.6, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0),  scale = "count", linewidth = 0, flip = FALSE, alpha = 0.6, show.legend = FALSE) +
 
         theme_classic() + facet_wrap(~c_var)
 
@@ -347,13 +347,13 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
 
       corset_plot <- ggplot(data = data.long, aes(x = x_axis, y = y)) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var1"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = -0.01,y = 0), size = 0, side = "l", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.01,y = 0), linewidth = 0, flip = TRUE, alpha = 1, show.legend = FALSE) +
 
-        gghalves::geom_half_violin(
+        see::geom_violinhalf(
           data = data.long[(data.long$x_axis=="var2"),], mapping = aes(x = x_axis, y = y), fill = vio_fill,
-          position = position_nudge(x = 0.01,y = 0), size = 0, side = "r", alpha = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.01,y = 0), linewidth = 0, flip = FALSE, alpha = 1, show.legend = FALSE) +
 
         geom_line(data = data.long2, mapping = aes(group = group), colour = line_col,
                   position = position_dodgev(height = line_dodge),
@@ -375,12 +375,12 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
         geom_pointrange(
           data = data.summ[(data.summ$x_axis=="var1"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = -0.075, y = 0), size = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.075, y = 0), linewidth = 1, show.legend = FALSE) +
 
         geom_pointrange(
           data = data.summ[(data.summ$x_axis=="var2"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = 0.075, y = 0), size = 1, show.legend = FALSE)
+          position = position_nudge(x = 0.075, y = 0), linewidth = 1, show.legend = FALSE)
 
     }
 
@@ -391,12 +391,12 @@ gg_corset <- function(data, y_var1, y_var2, group, c_var, eyelets = FALSE, e_typ
         geom_errorbar(
           data = data.summ[(data.summ$x_axis=="var1"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = -0.06, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
+          position = position_nudge(x = -0.06, y = 0), width = 0.025, linewidth = 1, show.legend = FALSE) +
 
         geom_errorbar(
           data = data.summ[(data.summ$x_axis=="var2"),],
           aes(x = x_axis, y = mean_y, ymin = mean_y - sd_se_min, ymax = mean_y + sd_se_max, colour = c_var),
-          position = position_nudge(x = 0.06, y = 0), width = 0.025, size = 1, show.legend = FALSE) +
+          position = position_nudge(x = 0.06, y = 0), width = 0.025, linewidth = 1, show.legend = FALSE) +
 
         geom_point(data = data.summ[(data.summ$x_axis=="var1"),],
                    aes(x = x_axis, y = mean_y, colour = c_var),
